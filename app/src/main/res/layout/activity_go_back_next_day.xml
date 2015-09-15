@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#BFD584"
+    android:weightSum = "3">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/askIfPlanting"
+        android:layout_weight="2.75"
+        android:src="@drawable/backfield"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.25"
+        android:scaleType="fitXY"
+        android:src="@drawable/bottom"
+        >
+    </ImageView>
+
+</LinearLayout>
