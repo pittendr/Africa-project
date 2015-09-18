@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 public class OptionsScreen extends AppCompatActivity {
 
+    ImageView optionsScout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,16 +21,31 @@ public class OptionsScreen extends AppCompatActivity {
 
         setContentView(R.layout.activity_options_screen);
 
+        optionsScout = (ImageView) findViewById(R.id.optionsscout);
+
+        if (!decision){
+            optionsScout.setAlpha(0.4f);
+        }
+
+
 
     }
 
     public void loadDisplayVideos(View view){
         Intent intent = new Intent(this, DisplayVideos.class);
+        Intent killIntent = new Intent(this, OptionsScreen.class);
+        killIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivity(killIntent);
+        finish();
         startActivity(intent);
     }
 
-    public void loadAskIfFlowers(View view){
+    public void loadAskIfFlower(View view){
         Intent intent = new Intent(this, AskIfFlowers.class);
+        Intent killIntent = new Intent(this, OptionsScreen.class);
+        killIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivity(killIntent);
+        finish();
         startActivity(intent);
     }
 

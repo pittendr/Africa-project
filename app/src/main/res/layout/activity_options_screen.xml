@@ -1,6 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#6D9681"
+    android:weightSum = "3"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2.25"
+        android:layout_gravity="center_horizontal"
+        >
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="100dp"
+        android:scaleType="fitXY"
+        android:id="@+id/optionsscout"
+        android:src="@drawable/optionsscout"
+        android:onClick="loadAskIfFlower"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:weightSum="2"
+        >
+
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#A9A352">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/videosbutton"
+                android:src="@drawable/optionsvideos"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:padding="0dp"
+                android:onClick="loadDisplayVideos"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#E29B43">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/mailbutton"
+                android:src="@drawable/optionsmail"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                android:padding="0dp"/>
+
+
+        </FrameLayout>
+
+
+    </LinearLayout>
 
 </LinearLayout>

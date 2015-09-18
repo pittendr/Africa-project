@@ -2,6 +2,55 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:background="#BFD584"
+    android:weightSum = "3"
+    android:gravity="center">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2.25">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/needtospray"
+            android:background="@drawable/needtospray"/>
+
+
+        <ImageButton
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:id="@+id/flowerAudio"
+            android:background="@drawable/audio"
+            android:onClick="toggleSprayAudio"
+            android:layout_marginTop="320dp"
+            android:layout_marginLeft="25dp"/>
+
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#B80F10"
+        android:gravity="center"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gobutton"
+            android:src="@drawable/go"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:padding="10dp"
+            android:layout_marginLeft="50dp"
+            android:onClick="goClick"/>
+
+    </LinearLayout>
 
 </LinearLayout>

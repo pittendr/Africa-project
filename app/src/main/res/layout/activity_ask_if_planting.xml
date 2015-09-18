@@ -1,42 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#BFD584"
-    android:weightSum = "3">
+    android:weightSum = "3"
+    android:gravity="center">
 
-    <ImageView
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:id="@+id/askIfPlantin"
-        android:layout_weight="2.24"
-        android:src="@drawable/planting"/>
+        android:layout_weight="2.25">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/askIfPlanting"
+            android:background="@drawable/planting"/>
+
+        <ImageButton
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:id="@+id/flowerAudio"
+            android:background="@drawable/audio"
+            android:onClick="togglePlantingAudio"
+            android:layout_marginTop="320dp"
+            android:layout_marginLeft="25dp"/>
+
+
+    </FrameLayout>
+
+
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="0.75"
+        android:layout_weight="1"
         android:weightSum="2"
         >
 
-        <ImageButton
+        <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/yesButton"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/yes"
-            android:scaleType="fitXY"
-            android:padding="0dp"/>
+            android:background="#93B0D2">
 
-        <ImageButton
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/yesButton"
+                android:src="@drawable/yes"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:padding="0dp"
+                android:onClick="yesClick"/>
+
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/noButton"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/no"
-            android:scaleType="fitXY"
-            android:padding="0dp"/>
+            android:background="#D83D3E">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/noButton"
+                android:src="@drawable/no"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                android:padding="0dp"
+                android:onClick="noClick"/>
+
+
+        </FrameLayout>
+
+
+
+
     </LinearLayout>
 
 </LinearLayout>

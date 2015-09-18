@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+    android:id="@+id/selected"
+    android:oneshot="false"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/flashrectangle1" android:duration="200" />
+    <item android:drawable="@drawable/flashrectangle2" android:duration="200" />
+</animation-list>
