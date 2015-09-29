@@ -1,6 +1,11 @@
 <resources>
-    <string name="app_name">Farmer Interface Application</string>
+    <string name="app_name">FIA</string>
 
     <string name="mainTitle">Precision \nIntegrated \nPest \nManagement</string>
-    <string name="action_settings">Settings</string>
+    <string name="askIfPlanting">Have you \nstarted planting \ntoday?</string>
+    <string name="askIfFlowers">Did you \nsee any \nflowers \ntoday?</string>
+    <string name="goBackNextDay">Go back to the \nfield next day \nand start scouting</string>
+    <string name="needToSpray">You need \nto spray</string>
+    <string name="mustScout">Today \nyou must \nscout</string>
+
 </resources>

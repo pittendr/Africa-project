@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#BFD584">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAlignBottom="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/bottom"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottom"
+        >
+    </ImageView>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/askIfPlanting"
+            android:background="@drawable/messageboxlarge"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/bottom"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:id="@+id/menuBar">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/home"
+                android:background="@drawable/home"
+                android:adjustViewBounds="true"
+                android:layout_alignParentLeft="true"
+                android:scaleType="fitXY"
+                android:onClick="homeClick"
+                />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/search"
+                android:layout_toRightOf="@+id/home"
+                android:visibility="invisible"
+                android:textColor="#000000"
+                android:id="@+id/searchInput" />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:id="@+id/search"
+                android:background="@drawable/search"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:onClick="searchClick"
+                />
+
+        </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="40dp"
+        android:text="@string/goBackNextDay"
+        android:id="@+id/largeText"
+        android:textColor="#000000"
+        android:layout_below="@id/menuBar"
+        android:paddingLeft="16dp"/>
+
+        <ImageButton
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:id="@+id/flowerAudio"
+            android:background="@drawable/audio"
+            android:onClick="toggleGoBackAudio"
+            android:layout_above="@+id/bottom"
+            android:layout_marginLeft="25dp"/>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/listView"
+            android:background="@drawable/customshape"
+            android:layout_below="@+id/menuBar"
+            android:divider="#ffffff"
+            android:dividerHeight="1px"
+            android:choiceMode="singleChoice"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:visibility="invisible"
+            android:fastScrollEnabled="true"
+            android:layout_above="@+id/bottom"
+            android:layout_marginBottom="16dp"
+            />
+
+
+    </RelativeLayout>
+
+
+

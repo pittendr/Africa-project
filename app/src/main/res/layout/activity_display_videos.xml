@@ -2,6 +2,72 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:background="#7D6BC2"
+    android:weightSum="3"
+    android:gravity="center">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:id="@+id/menuBar">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/home"
+            android:background="@drawable/home"
+            android:adjustViewBounds="true"
+            android:layout_alignParentLeft="true"
+            android:scaleType="fitXY"
+            android:onClick="homeClick"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/search"
+            android:layout_toRightOf="@+id/home"
+            android:textColor="#ffffff"
+            android:id="@+id/searchInput"
+            android:visibility="invisible"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:id="@+id/search"
+            android:background="@drawable/search"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:onClick="searchClick"
+            />
+
+
+
+    </RelativeLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:background="@drawable/customshape2"
+        android:id="@+id/videolistView"
+        android:divider="#ffffff"
+        android:dividerHeight="1px"
+        android:padding="15dp"
+        android:choiceMode="singleChoice"
+        android:fastScrollEnabled="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginRight="5dp"
+
+    />
+
+
 
 </LinearLayout>

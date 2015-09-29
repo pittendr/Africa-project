@@ -6,13 +6,14 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:largeHeap="true" >
         <activity
             android:name=".MainScreen"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,43 +21,52 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AskIfPlanting"
-           >
+            android:name=".SmallMessageBox"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait">
+        >
         </activity>
+
         <activity
-            android:name=".OptionsScreen"
+            android:name=".fullscreenvideo"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait">
             >
         </activity>
         <activity
-            android:name=".AskIfFlowers"
+            android:name=".OptionsScreen"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
             >
         </activity>
         <activity
             android:name=".DisplayVideos"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
             >
         </activity>
         <activity
-            android:name=".GoBackNextDay"
-            >
-        </activity>
-        <activity
-            android:name=".MustScout"
+            android:name=".LargeMessageBox"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
             >
         </activity>
         <activity
             android:name=".ScoutVideo"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
             >
         </activity>
         <activity
             android:name=".SampleSelection"
-            >
-        </activity>
-        <activity
-            android:name=".NeedToSpray"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
             >
         </activity>
         <activity
             android:name=".SprayVideo"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
             >
         </activity>
 
