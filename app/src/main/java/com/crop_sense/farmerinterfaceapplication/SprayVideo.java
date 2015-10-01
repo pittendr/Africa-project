@@ -1,29 +1,42 @@
 package com.crop_sense.farmerinterfaceapplication;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MediaController;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -31,13 +44,19 @@ import java.util.Locale;
 
 public class SprayVideo extends AppCompatActivity {
 
+    private final static int REQUEST_ENABLE_BT = 1;
+    Intent enableBtIntent;
+
+
     Boolean flag=false;
 
     EditText searchInput;
 
     ListView listView;
     ListViewAdapter adapter;
+    ListViewAdapter pairedAdapter;
     List<String> arrayList = new ArrayList<>();
+    List<String> pairedList = new ArrayList<>();
 
     String[] explanationVideo;
     String[] scoutVideo;
@@ -82,6 +101,8 @@ public class SprayVideo extends AppCompatActivity {
         searchInput = (EditText) findViewById(R.id.searchInput);
         adapter = (new ListViewAdapter(getApplicationContext(), arrayList));
 
+        pairedAdapter = (new ListViewAdapter(getApplicationContext(), pairedList));
+
         listView = (ListView) findViewById(R.id.listView);
 
         listView.setAdapter(adapter);
@@ -104,6 +125,7 @@ public class SprayVideo extends AppCompatActivity {
 
             }
         });
+
         searchInput.addTextChangedListener(
                 new TextWatcher() {
                     @Override
@@ -208,7 +230,7 @@ public class SprayVideo extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(searchInput.getWindowToken(), 0);
-        Toast.makeText(getApplicationContext(), "Feature not yet active", Toast.LENGTH_SHORT).show();
+        enableBluetooth();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -250,9 +272,54 @@ public class SprayVideo extends AppCompatActivity {
         super.onResume();
     }
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (resultCode == RESULT_CANCELED){
+            Toast.makeText(getApplicationContext(), "Enabling Bluetooth failed", Toast.LENGTH_SHORT).show();
+        }else if (resultCode == RESULT_OK){
+            Toast.makeText(getApplicationContext(), "Succesfully enabled Bluetooth", Toast.LENGTH_SHORT).show();
+            ApplicationInfo app = getApplicationContext().getApplicationInfo();
+            String filePath = app.sourceDir;
+
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.setType("*/*");
+            intent.setPackage("com.android.bluetooth");
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
+            startActivity(Intent.createChooser(intent, "Share app"));
+        }
+
+
+    }
+
+    @Override
     protected void onDestroy(){
         soundPool.release();
         soundPool=null;
         super.onDestroy();
     }
+    BluetoothAdapter btAdapter;
+
+    public void enableBluetooth(){
+        btAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (btAdapter == null){
+            Toast.makeText(getApplicationContext(), "Device does not have Bluetooth capabilities", Toast.LENGTH_SHORT).show();
+        }else if (!btAdapter.isEnabled()){
+            enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+
+        }else{
+
+            ApplicationInfo app = getApplicationContext().getApplicationInfo();
+            String filePath = app.sourceDir;
+
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.setType("*/*");
+            intent.setPackage("com.android.bluetooth");
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
+            startActivity(Intent.createChooser(intent, "Share app"));
+        }
+
+    }
+
 }

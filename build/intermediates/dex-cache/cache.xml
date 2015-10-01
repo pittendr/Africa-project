@@ -2,32 +2,32 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Nima\Desktop\FIA\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
+        jar="C:\Users\Nima\AppData\Local\Android\sdk1\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
-        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\debug\classes-f7a9668362642c478bfd9bd5bee7f55017ecc435.jar" />
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\release\support-annotations-23.0.1-c2de547ddb5852ed3a8e51437688afcf477c0e23.jar" />
     </item>
     <item
         jar="C:\Users\Nima\Desktop\FIA\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
-        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-fb5a5debf53b4198b3b9d61b2e98c1c0f25a3d5c.jar" />
+        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\release\internal_impl-23.0.1-fb5a5debf53b4198b3b9d61b2e98c1c0f25a3d5c.jar" />
     </item>
     <item
-        jar="C:\Users\Nima\AppData\Local\Android\sdk1\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jar="C:\Users\Nima\Desktop\FIA\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
-        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-c2de547ddb5852ed3a8e51437688afcf477c0e23.jar" />
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\release\classes-f7a9668362642c478bfd9bd5bee7f55017ecc435.jar" />
     </item>
     <item
         jar="C:\Users\Nima\Desktop\FIA\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
-        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\debug\classes-f97ff19c5854b5649805cf4a80225dec5d878722.jar" />
+        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\release\classes-f97ff19c5854b5649805cf4a80225dec5d878722.jar" />
     </item>
 
 </items>
