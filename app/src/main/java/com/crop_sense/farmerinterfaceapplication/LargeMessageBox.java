@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -59,7 +58,7 @@ public class LargeMessageBox extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_box_large);
 
-        final Intent videointent = new Intent(this, fullscreenvideo.class);
+        final Intent videointent = new Intent(this, searchvideo.class);
 
         voiceMemo=new MediaPlayer();
 

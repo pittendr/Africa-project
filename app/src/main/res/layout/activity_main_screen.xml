@@ -68,7 +68,15 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentTop="true"
             />
+
     </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_above="@+id/nextButton"
+        android:id="@+id/mediacontroller"
+        android:layout_marginBottom="105dp"/>
 
     <ImageButton
         android:layout_width="100dp"

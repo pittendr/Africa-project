@@ -13,13 +13,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
@@ -35,8 +37,7 @@ import java.util.Locale;
 public class ScoutVideo extends AppCompatActivity {
 
     VideoView scout;
-    Uri uri = Uri.parse("android.resource://com.crop_sense.farmerinterfaceapplication/"+R.raw.scoutvideo);
-
+    Uri scoutUri = Uri.parse("android.resource://com.crop_sense.farmerinterfaceapplication/"+R.raw.scoutvideo);
     Uri  voice = Uri.parse("android.resource://com.crop_sense.farmerinterfaceapplication/" + R.raw.voicememo5);
     MediaPlayer voiceMemo;
 
@@ -63,11 +64,17 @@ public class ScoutVideo extends AppCompatActivity {
 
     SoundPool soundPool;
     int soundId;
+    FrameLayout frameVideo;
+
+    ImageView skip;
+    ImageView fullscreen;
+
+    int position=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scout_video);
+        setContentView(R.layout.activity_video);
 
         scout = (VideoView) findViewById(R.id.scoutVideo);
         yesButton = (ImageButton) findViewById(R.id.yesButton2);
@@ -75,18 +82,41 @@ public class ScoutVideo extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
         homeButton = (ImageView) findViewById(R.id.home);
 
+        skip = new ImageView(getApplicationContext());
+        fullscreen = new ImageView(getApplicationContext());
 
-        scout.setVideoURI(uri);
-        scout.setMediaController(new MediaController(this));
-        scout.requestFocus();
-        scout.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                scout.start();
-            }
-        });
+        final CustomMediaController mediaController = new CustomMediaController(this, true);
 
-        final Intent videointent = new Intent(this, fullscreenvideo.class);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+
+            frameVideo = (FrameLayout) findViewById(R.id.mediacontroller);
+            scout.setVideoURI(scoutUri);
+            scout.setMediaController(mediaController);
+            scout.requestFocus();
+            scout.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mediaController.setAnchorView(frameVideo);
+                    mediaController.show();
+                    scout.start();
+                }
+            });
+        }else{
+            scout.setVideoURI(scoutUri);
+            scout.setMediaController(mediaController);
+            scout.requestFocus();
+            scout.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mediaController.show();
+                    scout.start();
+                }
+            });
+        }
+
+
+
+        final Intent videointent = new Intent(this, searchvideo.class);
 
         arrayList = new ArrayList<>();
 
@@ -139,7 +169,7 @@ public class ScoutVideo extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                soundPool.play(soundId,1,1,0,0,1);
+                soundPool.play(soundId, 1, 1, 0, 0, 1);
                 if (voiceMemo != null) {
                     voiceMemo.reset();
                     voiceMemo.release();
@@ -153,6 +183,7 @@ public class ScoutVideo extends AppCompatActivity {
                 imm.hideSoftInputFromWindow(searchInput.getWindowToken(), 0);
                 if (!videoname.equals("Test")) {
                     videointent.putExtra("videoname", videoname);
+                    videointent.putExtra("videoposition", 0);
                     Intent killIntent = new Intent(getApplicationContext(), ScoutVideo.class);
                     killIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(killIntent);
@@ -186,9 +217,34 @@ public class ScoutVideo extends AppCompatActivity {
                 }
         );
 
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!scout.isPlaying()) {
+                    scout.start();
+                }
+                scout.seekTo(scout.getDuration());
+            }
+        });
+
+        fullscreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                videointent.putExtra("videoname", "scoutvideo");
+                videointent.putExtra("videoposition", scout.getCurrentPosition());
+                startActivityForResult(videointent, 8008);
+            }
+        });
+
     }
 
-    public void yesScoutClick (View view){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        position=data.getIntExtra("videoposition",0);
+        scout.seekTo(position);
+        scout.start();
+    }
+
+    public void yesVideoClick (View view){
         if(voiceMemo!=null) {
             voiceMemo.reset();
             voiceMemo.release();
@@ -208,7 +264,7 @@ public class ScoutVideo extends AppCompatActivity {
         scout.start();
     }
 
-    public void noScoutClick (View view){
+    public void noVideoClick (View view){
         if(voiceMemo!=null) {
             voiceMemo.reset();
             voiceMemo.release();
@@ -273,8 +329,6 @@ public class ScoutVideo extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        scout.stopPlayback();
 
         if(voiceMemo!=null) {
             voiceMemo.reset();
@@ -345,6 +399,52 @@ public class ScoutVideo extends AppCompatActivity {
         soundPool.release();
         soundPool=null;
         super.onDestroy();
+    }
+
+    public class CustomMediaController extends MediaController {
+
+
+        public CustomMediaController(Context context, Boolean buttons) {
+            super(context, buttons);
+        }
+
+        @Override
+        public void setAnchorView(View view) {
+            super.setAnchorView(view);
+
+            skip.setImageResource(R.drawable.skip);
+            DisplayMetrics displaymetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+            int height = displaymetrics.heightPixels/18;
+
+            int orgWidth = skip.getDrawable().getIntrinsicWidth();
+            int orgHeight = skip.getDrawable().getIntrinsicHeight();
+
+            double newWidth = Math.floor((orgWidth * height) / orgHeight);
+
+
+
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams((int)newWidth, height);
+            params.setMargins((int) (newWidth/3.9),(int) (newWidth/2.17),(int) (newWidth/3.9),(int) (newWidth/3.9));
+            params.gravity = Gravity.END;
+            skip.setScaleType(ImageView.ScaleType.FIT_XY);
+            addView(skip, params);
+
+            fullscreen.setImageResource(R.drawable.fullscreen);
+
+            int orgWidth2 = fullscreen.getDrawable().getIntrinsicWidth();
+            int orgHeight2 = fullscreen.getDrawable().getIntrinsicHeight();
+
+            double newWidth2 = Math.floor((orgWidth2 * height) / orgHeight2);
+
+
+            FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams((int)newWidth2, height);
+            params2.setMargins((int) (newWidth/3.9),(int) (newWidth/2.17),(int) (newWidth/3.9),(int) (newWidth/3.9));
+            params2.gravity = Gravity.START;
+            fullscreen.setScaleType(ImageView.ScaleType.FIT_XY);
+            addView(fullscreen, params2);
+
+        }
     }
 
 }

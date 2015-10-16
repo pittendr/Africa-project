@@ -13,6 +13,7 @@
         android:background="#F0EAD6"
         android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
+        android:id="@+id/rectanglelayout"
         android:layout_above="@+id/buttonlayout"
         android:layout_below="@id/menuBar"
         android:gravity="center">
@@ -250,5 +251,18 @@
             android:onClick="yesPestClick"/>
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/undo"
+        android:background="@drawable/undo"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:onClick="undoClick"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/rectanglelayout"
+        />
+
 
 </RelativeLayout>

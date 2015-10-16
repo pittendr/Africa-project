@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#6D9681">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/buttonlayout1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:id="@+id/option1"
+                android:src="@drawable/option1"
+                android:adjustViewBounds="true"
+                android:layout_weight="1"
+                android:onClick="option1Click"/>
+
+            <ImageView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:id="@+id/option2"
+                android:src="@drawable/option2"
+                android:adjustViewBounds="true"
+                android:layout_weight="1"
+                android:onClick="option2Click"/>
+
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent"
+
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/buttonlayout2"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:scaleType="fitXY"
+                android:id="@+id/option3"
+                android:src="@drawable/option3"
+                android:adjustViewBounds="true"
+                android:layout_weight="1"
+                android:onClick="option3Click"/>
+
+            <ImageView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:id="@+id/option4"
+                android:src="@drawable/option4"
+                android:adjustViewBounds="true"
+                android:layout_weight="1"
+                android:onClick="option4Click"/>
+
+        </LinearLayout>
+
+
+
+
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/buttonlayout"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:id="@+id/option5"
+                android:src="@drawable/option5"
+                android:adjustViewBounds="true"
+                android:layout_weight="1"
+                android:onClick="option5Click"/>
+
+            <ImageView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:id="@+id/option6"
+                android:src="@drawable/option6"
+                android:adjustViewBounds="true"
+                android:layout_weight="1"
+                android:onClick="option6Click"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:id="@+id/menuBar">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/home"
+            android:background="@drawable/home"
+            android:adjustViewBounds="true"
+            android:layout_alignParentLeft="true"
+            android:scaleType="fitXY"
+            android:onClick="homeClick"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/search"
+            android:layout_toRightOf="@+id/home"
+            android:visibility="invisible"
+            android:textColor="#000000"
+            android:id="@+id/searchInput" />
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:id="@+id/search"
+            android:background="@drawable/search"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:onClick="searchClick"
+            />
+
+
+
+    </RelativeLayout>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:background="@drawable/customshape"
+        android:layout_below="@+id/menuBar"
+        android:divider="#ffffff"
+        android:dividerHeight="1px"
+        android:choiceMode="singleChoice"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:visibility="invisible"
+        android:fastScrollEnabled="true"
+        android:layout_marginBottom="16dp"
+        />
+
+
+
+
+</RelativeLayout>

@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
-import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,7 +17,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -47,9 +44,9 @@ public class SampleSelection extends AppCompatActivity {
 
     boolean flag = false;
 
+    AnimationDrawable frameAnimation;
 
-
-
+    ImageView undo;
 
     private int countRed = 0;
     private int countGreen = 0;
@@ -57,6 +54,8 @@ public class SampleSelection extends AppCompatActivity {
     int [] rectangleViews = {R.id.rectangle1, R.id.rectangle2, R.id.rectangle3,
             R.id.rectangle4, R.id.rectangle5, R.id.rectangle6, R.id.rectangle7,
             R.id.rectangle8, R.id.rectangle9, R.id.rectangle10 };
+
+    boolean [] rectangleSelected = {false, false, false, false, false, false, false, false, false, false,};
     ImageView tmp;
 
     SoundPool soundPool;
@@ -72,7 +71,7 @@ public class SampleSelection extends AppCompatActivity {
         AnimationDrawable frameAnimation = (AnimationDrawable) tmp.getDrawable();
         frameAnimation.start();
 
-        final Intent videointent = new Intent(this, fullscreenvideo.class);
+        final Intent videointent = new Intent(this, searchvideo.class);
 
         arrayList = new ArrayList<>();
 
@@ -95,6 +94,7 @@ public class SampleSelection extends AppCompatActivity {
 
         searchInput = (EditText) findViewById(R.id.searchInput);
         adapter = (new ListViewAdapter(getApplicationContext(),arrayList ));
+        undo = (ImageView) findViewById(R.id.undo);
 
         listView = (ListView) findViewById(R.id.listView);
 
@@ -143,11 +143,12 @@ public class SampleSelection extends AppCompatActivity {
     }
 
     public void yesPestClick (View view){
+        rectangleSelected[countGreen+countRed]=true;
 
-        soundPool.play(soundId,1,1,0,0,1);
+        soundPool.play(soundId, 1, 1, 0, 0, 1);
 
         tmp.setImageResource(R.drawable.flashrectangle2);
-
+        tmp.setSelected(true);
         countRed++;
         if(countRed + countGreen == 10){
             tallyBoxes();
@@ -155,7 +156,7 @@ public class SampleSelection extends AppCompatActivity {
 
             tmp = (ImageView) findViewById(rectangleViews[countGreen + countRed]);
             tmp.setImageResource(R.drawable.flash);
-            AnimationDrawable frameAnimation = (AnimationDrawable) tmp.getDrawable();
+            frameAnimation = (AnimationDrawable) tmp.getDrawable();
             frameAnimation.start();
         }
 
@@ -164,17 +165,20 @@ public class SampleSelection extends AppCompatActivity {
     }
 
     public void noPestClick (View view){
-        soundPool.play(soundId,1,1,0,0,1);
+        rectangleSelected[countGreen+countRed]=false;
+
+        soundPool.play(soundId, 1, 1, 0, 0, 1);
 
         tmp.setImageResource(R.drawable.flashrectangle1);
         countGreen++;
+
         if(countRed + countGreen == 10){
             tallyBoxes();
         }else {
 
             tmp = (ImageView) findViewById(rectangleViews[countGreen + countRed]);
             tmp.setImageResource(R.drawable.flash);
-            AnimationDrawable frameAnimation = (AnimationDrawable) tmp.getDrawable();
+            frameAnimation = (AnimationDrawable) tmp.getDrawable();
             frameAnimation.start();
         }
     }
@@ -204,6 +208,26 @@ public class SampleSelection extends AppCompatActivity {
         }
     }
 
+    public void undoClick(View view){
+        soundPool.play(soundId,1,1,0,0,1);
+
+        if(countGreen+countRed>0) {
+            if (rectangleSelected[countGreen + countRed] == true) {
+                countRed--;
+            } else {
+                countGreen--;
+            }
+
+
+            frameAnimation.stop();
+            tmp.setImageResource(R.drawable.flashrectangle1);
+            tmp = (ImageView) findViewById(rectangleViews[countGreen + countRed]);
+            tmp.setImageResource(R.drawable.flash);
+            frameAnimation = (AnimationDrawable) tmp.getDrawable();
+            frameAnimation.start();
+        }
+    }
+
     public void homeClick (View view){
         soundPool.play(soundId,1,1,0,0,1);
 
@@ -221,6 +245,7 @@ public class SampleSelection extends AppCompatActivity {
     public void searchClick (View view){
         soundPool.play(soundId, 1, 1, 0, 0, 1);
         if(!flag) {
+            undo.setVisibility(View.INVISIBLE);
             searchInput.setVisibility(View.VISIBLE);
             listView.setVisibility(View.VISIBLE);
             flag = true;
@@ -231,6 +256,7 @@ public class SampleSelection extends AppCompatActivity {
         }else{
             searchInput.setVisibility(View.INVISIBLE);
             listView.setVisibility(View.INVISIBLE);
+            undo.setVisibility(View.VISIBLE);
             searchInput.setText("");
             flag = false;
             InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(
@@ -249,8 +275,8 @@ public class SampleSelection extends AppCompatActivity {
             super.onBackPressed();
             this.finish();
 
-
         }else{
+            undo.setVisibility(View.VISIBLE);
             searchInput.setVisibility(View.INVISIBLE);
             listView.setVisibility(View.INVISIBLE);
             flag=false;
@@ -285,6 +311,7 @@ public class SampleSelection extends AppCompatActivity {
     }
     @Override
     protected void onResume(){
+        undo.setVisibility(View.VISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             createNewSoundPool();
         }else{

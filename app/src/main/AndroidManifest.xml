@@ -30,7 +30,7 @@
         </activity>
 
         <activity
-            android:name=".fullscreenvideo"
+            android:name=".searchvideo"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait">
             >
@@ -67,6 +67,12 @@
         </activity>
         <activity
             android:name=".SprayVideo"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        <activity
+            android:name=".FinalScreen"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
             >

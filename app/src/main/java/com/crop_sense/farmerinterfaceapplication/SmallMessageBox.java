@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -49,6 +52,8 @@ public class SmallMessageBox extends AppCompatActivity {
     SoundPool soundPool;
     int soundId;
 
+    int loop =1;
+
     TextView smallText;
 
     ListView listView;
@@ -80,6 +85,12 @@ public class SmallMessageBox extends AppCompatActivity {
     ImageView yesButton;
     ImageView noButton;
 
+    final AnimationDrawable drawable = new AnimationDrawable();
+    final AnimationDrawable drawable2 = new AnimationDrawable();
+
+    final Handler handler = new Handler();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +106,7 @@ public class SmallMessageBox extends AppCompatActivity {
 
         soundId = soundPool.load(getApplicationContext(), R.raw.buttonclick, 1);
 
-        final Intent videointent = new Intent(this, fullscreenvideo.class);
+        final Intent videointent = new Intent(this, searchvideo.class);
 
         voiceMemo=new MediaPlayer();
 
@@ -144,7 +155,7 @@ public class SmallMessageBox extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                soundPool.play(soundId,1,1,0,0,1);
+                soundPool.play(soundId, 1, 1, 0, 0, 1);
                 searchInput.setText("");
                 String videoname = listView.getItemAtPosition(position).toString();
 
@@ -249,12 +260,13 @@ public class SmallMessageBox extends AppCompatActivity {
             voiceMemo = new MediaPlayer();
         }
         setScreenVoice(screenNumber);
+        loop=1;
         super.onResume();
     }
 
     public void yesClick (View view){
 
-        soundPool.play(soundId,1,1,0,0,0);
+        soundPool.play(soundId, 1, 1, 0, 0, 0);
         InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(searchInput.getWindowToken(), 0);
@@ -275,7 +287,7 @@ public class SmallMessageBox extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(searchInput.getWindowToken(), 0);
-        soundPool.play(soundId,1,1,0,0,0);
+        soundPool.play(soundId, 1, 1, 0, 0, 0);
         Intent intent = new Intent(this, ScoutVideo.class);
         startActivity(intent);
 
@@ -443,18 +455,45 @@ public class SmallMessageBox extends AppCompatActivity {
         }
         else if (previousScreen==4){
             screenVoice = voice6;
-            alarmActivate=new MediaPlayer();
+            alarmActivate = new MediaPlayer();
             try {
                 voiceMemo.setDataSource(this, screenVoice);
                 voiceMemo.prepare();
                 alarmActivate.setDataSource(this, alarm);
                 alarmActivate.prepare();
-            }catch (Exception e){
+            } catch (Exception e) {
                 //TODO
             }
-            alarmActivate.setLooping(true);
+            alarmActivate.setVolume(0.07f, 0.07f);
             alarmActivate.start();
+            alarmActivate.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    if (loop != 0) {
+                        alarmActivate.start();
+                        loop--;
+                    }
+                }
+            });
             voiceMemo.start();
+
+            drawable.addFrame(new ColorDrawable(Color.parseColor("#d35657")), 300);
+            drawable.addFrame(new ColorDrawable(Color.parseColor("#BFD584")), 300);
+            drawable.setOneShot(false);
+            drawable2.addFrame(new ColorDrawable(Color.parseColor("#BFD584")), 300);
+            drawable2.addFrame(new ColorDrawable(Color.parseColor("#B80F10")), 300);
+            drawable2.setOneShot(false);
+
+            screenBackground.setBackgroundDrawable(drawable);
+            background2.setBackgroundDrawable(drawable2);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    drawable.start();
+                    drawable2.start();
+                }
+            }, 100);
+
         }
 
     }
@@ -476,7 +515,6 @@ public class SmallMessageBox extends AppCompatActivity {
             super.onBackPressed();
 
             if(alarmActivate!=null){
-                alarmActivate.setLooping(false);
                 alarmActivate.reset();
                 alarmActivate.release();
                 alarmActivate=null;
@@ -506,7 +544,6 @@ public class SmallMessageBox extends AppCompatActivity {
     protected void createOldSoundPool(){
         soundPool = new SoundPool(1 , AudioManager.STREAM_MUSIC,0);
     }
-
 
 }
 
