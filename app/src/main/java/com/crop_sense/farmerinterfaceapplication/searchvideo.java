@@ -1,6 +1,7 @@
 package com.crop_sense.farmerinterfaceapplication;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -24,6 +25,7 @@ public class searchvideo extends AppCompatActivity {
 
     VideoView introVideo;
     MediaPlayer video;
+    int position=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
