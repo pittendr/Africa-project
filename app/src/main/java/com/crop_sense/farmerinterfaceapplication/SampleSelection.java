@@ -1,13 +1,25 @@
 package com.crop_sense.farmerinterfaceapplication;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
+import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,12 +33,28 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 
 public class SampleSelection extends AppCompatActivity {
+
+
+    SharedPreferences settings;
+    String server = "";
 
     ListView listView;
     ListViewAdapter adapter;
@@ -42,6 +70,8 @@ public class SampleSelection extends AppCompatActivity {
 
     EditText searchInput;
 
+    File file;
+
     boolean flag = false;
 
     AnimationDrawable frameAnimation;
@@ -50,6 +80,7 @@ public class SampleSelection extends AppCompatActivity {
 
     private int countRed = 0;
     private int countGreen = 0;
+    private int total = 0;
 
     int [] rectangleViews = {R.id.rectangle1, R.id.rectangle2, R.id.rectangle3,
             R.id.rectangle4, R.id.rectangle5, R.id.rectangle6, R.id.rectangle7,
@@ -61,10 +92,40 @@ public class SampleSelection extends AppCompatActivity {
     SoundPool soundPool;
     int soundId;
 
+    private String macAddress = null;
+    private String androidid = null;
+    private String serialNumber = null;
+    long newRowId;
+
+    String date;
+    String pests;
+    SharedPreferences savedLocation;
+    String usableLocation = "No Location Detected";
+
+    SharedPreferences savedTime;
+    long usableTime = 0;
+
+    ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample_selection);
+
+
+         dialog = new ProgressDialog(SampleSelection.this);
+
+        savedLocation = getSharedPreferences("location", MODE_PRIVATE);
+        usableLocation =savedLocation.getString("locationAddress", usableLocation);
+        savedTime = getSharedPreferences("time", MODE_PRIVATE);
+        usableTime = savedTime.getLong("timeMS", usableTime);
+        if ((System.currentTimeMillis() - usableTime)>1800000){
+            usableLocation=null;
+        }
+
+        if (!checkService()){
+            startService(new Intent(this, LocationService.class));
+        }
 
         tmp = (ImageView) findViewById(rectangleViews[countGreen+countRed]);
         tmp.setImageResource(R.drawable.flash);
@@ -88,6 +149,10 @@ public class SampleSelection extends AppCompatActivity {
         arrayList.add("Test");
         arrayList.add("Test");
         arrayList.add("Test");
+
+
+        settings = getSharedPreferences("ip", MODE_PRIVATE);
+        server = settings.getString("ipAddress", server);
 
         screenBackground = (RelativeLayout) findViewById(R.id.smallmessageboxbackground);
         menuBar = (RelativeLayout) findViewById(R.id.menuBar);
@@ -143,18 +208,23 @@ public class SampleSelection extends AppCompatActivity {
     }
 
     public void yesPestClick (View view){
-        rectangleSelected[countGreen+countRed]=true;
 
         soundPool.play(soundId, 1, 1, 0, 0, 1);
 
         tmp.setImageResource(R.drawable.flashrectangle2);
         tmp.setSelected(true);
         countRed++;
+        total=countGreen+countRed;
+        if (total>=10){
+            total=9;
+        }
+
+        rectangleSelected[total] = true;
         if(countRed + countGreen == 10){
-            tallyBoxes();
+            GetLocation();
         }else {
 
-            tmp = (ImageView) findViewById(rectangleViews[countGreen + countRed]);
+            tmp = (ImageView) findViewById(rectangleViews[total]);
             tmp.setImageResource(R.drawable.flash);
             frameAnimation = (AnimationDrawable) tmp.getDrawable();
             frameAnimation.start();
@@ -165,18 +235,22 @@ public class SampleSelection extends AppCompatActivity {
     }
 
     public void noPestClick (View view){
-        rectangleSelected[countGreen+countRed]=false;
-
         soundPool.play(soundId, 1, 1, 0, 0, 1);
 
         tmp.setImageResource(R.drawable.flashrectangle1);
         countGreen++;
+        total=countGreen+countRed;
+        if (total>=10){
+            total=9;
+        }
+
+        rectangleSelected[total] = false;
 
         if(countRed + countGreen == 10){
-            tallyBoxes();
+            GetLocation();
         }else {
 
-            tmp = (ImageView) findViewById(rectangleViews[countGreen + countRed]);
+            tmp = (ImageView) findViewById(rectangleViews[total]);
             tmp.setImageResource(R.drawable.flash);
             frameAnimation = (AnimationDrawable) tmp.getDrawable();
             frameAnimation.start();
@@ -184,6 +258,7 @@ public class SampleSelection extends AppCompatActivity {
     }
 
     public void tallyBoxes(){
+        dialog.dismiss();
         if(countRed >= 4){
             InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(
                     Context.INPUT_METHOD_SERVICE);
@@ -209,7 +284,7 @@ public class SampleSelection extends AppCompatActivity {
     }
 
     public void undoClick(View view){
-        soundPool.play(soundId,1,1,0,0,1);
+        soundPool.play(soundId, 1, 1, 0, 0, 1);
 
         if(countGreen+countRed>0) {
             if (rectangleSelected[countGreen + countRed] == true) {
@@ -252,7 +327,7 @@ public class SampleSelection extends AppCompatActivity {
             searchInput.setEnabled(true);
             searchInput.setFocusable(true);
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }else{
             searchInput.setVisibility(View.INVISIBLE);
             listView.setVisibility(View.INVISIBLE);
@@ -326,6 +401,151 @@ public class SampleSelection extends AppCompatActivity {
         soundPool.release();
         soundPool=null;
         super.onDestroy();
+    }
+
+    protected void saveData(){
+
+        date = DateFormat.getDateTimeInstance().format(new Date());
+        pests = String.valueOf(countRed);
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getActiveNetworkInfo();
+
+        WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        if (wifi.isWifiEnabled()){
+            if (mWifi.isConnected()) {
+                WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                WifiInfo wInfo = wifiManager.getConnectionInfo();
+                macAddress = wInfo.getMacAddress();
+            }
+        }
+
+        androidid = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        serialNumber = Build.SERIAL;
+
+
+        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "fiadata.xml");
+        if (!file.exists()){
+            try {
+                file.createNewFile();
+            }catch (Exception e){
+                //TODO
+            }
+        }
+        try {
+            FileOutputStream fos = new  FileOutputStream(file);
+            fos.write(("<?xml version='1.0' ?><data id=\"fiadata\"><gps>"+usableLocation+"</gps><aid>"+androidid+"</aid><mac>"+macAddress+"</mac><serial>"+serialNumber+"</serial><time>"+date+"</time><pests>"+pests+"</pests></data>").getBytes());
+            fos.close();}catch (Exception e){
+            //TODO
+        }
+
+        new postRequest().execute();
+    }
+
+
+    protected void GetLocation(){
+        dialog.setMessage("Saving Data");
+        dialog.setCancelable(false);
+        dialog.show();
+
+        stopService(new Intent(this, LocationService.class));
+        saveData();
+    }
+
+    private class saveToDb extends AsyncTask<String, Void, String>{
+        @Override
+        protected String doInBackground(String... params){
+
+            dbHelper mDbHelper = new dbHelper(getApplicationContext());
+
+            SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put(dbContract.FeedEntry.COLUMN_NAME_MAC, macAddress);
+            values.put(dbContract.FeedEntry.COLUMN_NAME_SERIAL, serialNumber);
+            values.put(dbContract.FeedEntry.COLUMN_NAME_AID, androidid);
+            values.put(dbContract.FeedEntry.COLUMN_NAME_TIME, date);
+            values.put(dbContract.FeedEntry.COLUMN_NAME_PESTS, pests);
+            values.put(dbContract.FeedEntry.COLUMN_NAME_GPS, usableLocation);
+
+
+            newRowId = db.insert(
+                    dbContract.FeedEntry.TABLE_NAME,
+                    null,
+                    values);
+
+            return "done";
+
+        }
+
+        @Override
+        protected void onPostExecute(String Result){
+
+        }
+        @Override
+        protected void onPreExecute(){
+        }
+        @Override
+        protected void onProgressUpdate(Void... values){
+
+        }
+
+    }
+
+    private class postRequest extends AsyncTask<String, Void, String>{
+
+        String url ="http://"+server+"/submission";
+
+        HttpClient httpclient = new DefaultHttpClient();
+
+        HttpPost httppost = new HttpPost(url);
+        HttpResponse response;
+        int code;
+
+        @Override
+        protected String doInBackground(String... params){
+
+
+            try {
+                InputStreamEntity reqEntity = new InputStreamEntity(
+                        new FileInputStream(file), -1);
+                reqEntity.setContentType("binary/octet-stream");
+                httppost.setEntity(reqEntity);
+                response = httpclient.execute(httppost);
+                code=response.getStatusLine().getStatusCode();
+
+            } catch (Exception e) {
+                //TODO
+            }
+            return "nothing";
+
+        }
+
+        @Override
+        protected void onPostExecute(String Result){
+            if(code!=201){
+                new saveToDb().execute();
+            }
+            tallyBoxes();
+        }
+        @Override
+        protected void onProgressUpdate(Void... values){
+
+        }
+
+    }
+
+    public boolean checkService(){
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if ("com.crop_sense.farmerinterfaceapplication.LocationService"
+                    .equals(service.service.getClassName()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
