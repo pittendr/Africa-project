@@ -1,6 +1,7 @@
 package com.crop_sense.farmerinterfaceapplication;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +20,12 @@ public class VideoListViewAdapter extends BaseAdapter{
 
     private List<String> videoList;
     private ArrayList<String> arraylist;
+    private List<Bitmap> thumbList;
 
-    public VideoListViewAdapter(Context ctxt, List<String> vdLst) {
+    public VideoListViewAdapter(Context ctxt, List<String> vdLst,  List<Bitmap> tbLst) {
         this.context = ctxt;
         this.videoList= vdLst;
+        this.thumbList = tbLst;
         this.arraylist = new ArrayList<String>();
         this.arraylist.addAll(vdLst);
 
@@ -43,6 +46,8 @@ public class VideoListViewAdapter extends BaseAdapter{
 
         Typeface type = Typeface.createFromAsset(context.getAssets(), "myriadproregular.otf");
 
+        Bitmap thumb = thumbList.get(position);
+
         String entry = videoList.get(position);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
@@ -50,6 +55,8 @@ public class VideoListViewAdapter extends BaseAdapter{
             convertView = inflater.inflate(R.layout.listvideoview, null);
         }
         TextView text1 = (TextView) convertView.findViewById(R.id.text1);
+        ImageView image = (ImageView) convertView.findViewById(R.id.video1);
+        image.setImageBitmap(thumb);
         text1.setText(entry);
         text1.setTypeface(type);
 

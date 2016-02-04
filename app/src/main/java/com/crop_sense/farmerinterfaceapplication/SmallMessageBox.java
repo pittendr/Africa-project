@@ -3,12 +3,15 @@ package com.crop_sense.farmerinterfaceapplication;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.net.Uri;
@@ -59,6 +62,7 @@ public class SmallMessageBox extends AppCompatActivity {
     ListView listView;
     ListViewAdapter adapter;
     List<String> arrayList = new ArrayList<>();
+    List<Bitmap> thumbList = new ArrayList<>();
 
     String[] explanationVideo;
     String[] scoutVideo;
@@ -116,15 +120,32 @@ public class SmallMessageBox extends AppCompatActivity {
         scoutVideo = (getResources().getResourceName(R.raw.scoutvideo)).split("raw/");
         sprayVideo = (getResources().getResourceName(R.raw.sprayvideo)).split("raw/");
 
+        Uri eURI = Uri.parse("android.resource://" + getPackageName() + "/"
+                + R.raw.explanationvideo);
+        MediaMetadataRetriever eretriever = new MediaMetadataRetriever();
+        eretriever.setDataSource(this, eURI);
+        Bitmap ethumb = eretriever
+                .getFrameAtTime(3486816, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+        Uri scURI = Uri.parse("android.resource://" + getPackageName() + "/"
+                + R.raw.scoutvideo);
+        MediaMetadataRetriever scretriever = new MediaMetadataRetriever();
+        scretriever.setDataSource(this, scURI);
+        Bitmap scthumb = scretriever
+                .getFrameAtTime(20203516, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+        Uri spURI = Uri.parse("android.resource://" + getPackageName() + "/"
+                + R.raw.sprayvideo);
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(this, spURI);
+        Bitmap spthumb = retriever
+                .getFrameAtTime(54000000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+
         arrayList.add(explanationVideo[1]);
         arrayList.add(scoutVideo[1]);
         arrayList.add(sprayVideo[1]);
-        arrayList.add("Test");
-        arrayList.add("Test");
-        arrayList.add("Test");
-        arrayList.add("Test");
-        arrayList.add("Test");
-        arrayList.add("Test");
+        thumbList.add(ethumb);
+        thumbList.add(scthumb);
+        thumbList.add(spthumb);
+
 
         smallText = (TextView) findViewById(R.id.smallText);
 
@@ -138,7 +159,7 @@ public class SmallMessageBox extends AppCompatActivity {
         flowerAudio = (ImageButton) findViewById(R.id.flowerAudio);
 
         searchInput = (EditText) findViewById(R.id.searchInput);
-        adapter = (new ListViewAdapter(getApplicationContext(),arrayList ));
+        adapter = (new ListViewAdapter(getApplicationContext(),arrayList, thumbList ));
 
         goButton = (ImageView) findViewById(R.id.goButton);
         scoutButton = (ImageView) findViewById(R.id.scoutButton);

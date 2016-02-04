@@ -3,9 +3,12 @@ package com.crop_sense.farmerinterfaceapplication;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +31,7 @@ public class DisplayVideos extends AppCompatActivity {
     ListView listView;
     VideoListViewAdapter adapter;
     List<String> arrayList = new ArrayList<>();
+    List<Bitmap> thumbList = new ArrayList<>();
 
     String[] explanationVideo;
     String[] scoutVideo;
@@ -54,17 +58,33 @@ public class DisplayVideos extends AppCompatActivity {
         scoutVideo = (getResources().getResourceName(R.raw.scoutvideo)).split("raw/");
         sprayVideo = (getResources().getResourceName(R.raw.sprayvideo)).split("raw/");
 
+        Uri eURI = Uri.parse("android.resource://" + getPackageName() + "/"
+                + R.raw.explanationvideo);
+        MediaMetadataRetriever eretriever = new MediaMetadataRetriever();
+        eretriever.setDataSource(this, eURI);
+        Bitmap ethumb = eretriever
+                .getFrameAtTime(3486816, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+        Uri scURI = Uri.parse("android.resource://" + getPackageName() + "/"
+                + R.raw.scoutvideo);
+        MediaMetadataRetriever scretriever = new MediaMetadataRetriever();
+        scretriever.setDataSource(this, scURI);
+        Bitmap scthumb = scretriever
+                .getFrameAtTime(20203516, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+        Uri spURI = Uri.parse("android.resource://" + getPackageName() + "/"
+                + R.raw.sprayvideo);
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(this, spURI);
+        Bitmap spthumb = retriever
+                .getFrameAtTime(54000000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+
         arrayList.add(explanationVideo[1]);
         arrayList.add(scoutVideo[1]);
         arrayList.add(sprayVideo[1]);
-        arrayList.add("Test");
-        arrayList.add("Test");
-        arrayList.add("Test");
-        arrayList.add("Test");
-        arrayList.add("Test");
-        arrayList.add("Test");
+        thumbList.add(ethumb);
+        thumbList.add(scthumb);
+        thumbList.add(spthumb);
 
-        adapter = (new VideoListViewAdapter(getApplicationContext(),arrayList ));
+        adapter = (new VideoListViewAdapter(getApplicationContext(),arrayList, thumbList ));
 
         listView = (ListView) findViewById(R.id.videolistView);
 

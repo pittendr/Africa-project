@@ -5,8 +5,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Build;
@@ -39,9 +42,9 @@ public class FinalScreen extends AppCompatActivity {
 
     ListView listView;
     ListViewAdapter adapter;
-    ListViewAdapter pairedAdapter;
     List<String> arrayList = new ArrayList<>();
-    List<String> pairedList = new ArrayList<>();
+
+    List<Bitmap> thumbList = new ArrayList<>();
 
     String[] explanationVideo;
     String[] scoutVideo;
@@ -73,20 +76,34 @@ public class FinalScreen extends AppCompatActivity {
         scoutVideo = (getResources().getResourceName(R.raw.scoutvideo)).split("raw/");
         sprayVideo = (getResources().getResourceName(R.raw.sprayvideo)).split("raw/");
 
+        Uri eURI = Uri.parse("android.resource://" + getPackageName() + "/"
+                + R.raw.explanationvideo);
+        MediaMetadataRetriever eretriever = new MediaMetadataRetriever();
+        eretriever.setDataSource(this, eURI);
+        Bitmap ethumb = eretriever
+                .getFrameAtTime(3486816, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+        Uri scURI = Uri.parse("android.resource://" + getPackageName() + "/"
+                + R.raw.scoutvideo);
+        MediaMetadataRetriever scretriever = new MediaMetadataRetriever();
+        scretriever.setDataSource(this, scURI);
+        Bitmap scthumb = scretriever
+                .getFrameAtTime(20203516, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+        Uri spURI = Uri.parse("android.resource://" + getPackageName() + "/"
+                + R.raw.sprayvideo);
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(this, spURI);
+        Bitmap spthumb = retriever
+                .getFrameAtTime(54000000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+
         arrayList.add(explanationVideo[1]);
         arrayList.add(scoutVideo[1]);
         arrayList.add(sprayVideo[1]);
-        arrayList.add("Test");
-        arrayList.add("Test");
-        arrayList.add("Test");
-        arrayList.add("Test");
-        arrayList.add("Test");
-        arrayList.add("Test");
+        thumbList.add(ethumb);
+        thumbList.add(scthumb);
+        thumbList.add(spthumb);
 
         searchInput = (EditText) findViewById(R.id.searchInput);
-        adapter = (new ListViewAdapter(getApplicationContext(), arrayList));
-
-        pairedAdapter = (new ListViewAdapter(getApplicationContext(), pairedList));
+        adapter = (new ListViewAdapter(getApplicationContext(), arrayList, thumbList));
 
         listView = (ListView) findViewById(R.id.listView);
 
