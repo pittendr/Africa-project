@@ -26,6 +26,7 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -41,8 +42,11 @@ import android.widget.Toast;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -88,6 +92,8 @@ public class SampleSelection extends AppCompatActivity {
     private int countGreen = 0;
     private int total = 0;
 
+    JSONObject postMessage = new JSONObject();
+
     int [] rectangleViews = {R.id.rectangle1, R.id.rectangle2, R.id.rectangle3,
             R.id.rectangle4, R.id.rectangle5, R.id.rectangle6, R.id.rectangle7,
             R.id.rectangle8, R.id.rectangle9, R.id.rectangle10 };
@@ -105,8 +111,9 @@ public class SampleSelection extends AppCompatActivity {
 
     String date;
     String pests;
+    String phone;
     SharedPreferences savedLocation;
-    String usableLocation = "No Location Detected";
+    JSONObject usableLocation = new JSONObject();
 
     SharedPreferences savedTime;
     long usableTime = 0;
@@ -122,7 +129,11 @@ public class SampleSelection extends AppCompatActivity {
          dialog = new ProgressDialog(SampleSelection.this);
 
         savedLocation = getSharedPreferences("location", MODE_PRIVATE);
-        usableLocation =savedLocation.getString("locationAddress", usableLocation);
+        try {
+            usableLocation = new JSONObject(savedLocation.getString("locationAddress", usableLocation.toString()));
+        }catch(JSONException e){
+            //TODO
+        }
         savedTime = getSharedPreferences("time", MODE_PRIVATE);
         usableTime = savedTime.getLong("timeMS", usableTime);
         if ((System.currentTimeMillis() - usableTime)>1800000){
@@ -441,12 +452,15 @@ public class SampleSelection extends AppCompatActivity {
             }
         }
 
+        TelephonyManager tMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        phone = tMgr.getLine1Number();
+
         androidid = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         serialNumber = Build.SERIAL;
 
 
-        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "fiadata.xml");
+        /*file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "fiadata.xml");
         if (!file.exists()){
             try {
                 file.createNewFile();
@@ -459,7 +473,21 @@ public class SampleSelection extends AppCompatActivity {
             fos.write(("<?xml version='1.0' ?><data id=\"fiadata\"><gps>"+usableLocation+"</gps><aid>"+androidid+"</aid><mac>"+macAddress+"</mac><serial>"+serialNumber+"</serial><time>"+date+"</time><pests>"+pests+"</pests></data>").getBytes());
             fos.close();}catch (Exception e){
             //TODO
+        }*/
+        try{
+            postMessage.put("phone", phone);
+            postMessage.put("gps", usableLocation);
+            postMessage.put("aid", androidid);
+            postMessage.put("mac", macAddress);
+            postMessage.put("serial", serialNumber);
+            postMessage.put("time", date);
+            postMessage.put("pests", pests);
+
+        }catch(Exception e){
+            //TODO
         }
+
+
 
         new postRequest().execute();
     }
@@ -483,13 +511,13 @@ public class SampleSelection extends AppCompatActivity {
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
             ContentValues values = new ContentValues();
+            values.put(dbContract.FeedEntry.COLUMN_NAME_PHONE, phone);
             values.put(dbContract.FeedEntry.COLUMN_NAME_MAC, macAddress);
             values.put(dbContract.FeedEntry.COLUMN_NAME_SERIAL, serialNumber);
             values.put(dbContract.FeedEntry.COLUMN_NAME_AID, androidid);
             values.put(dbContract.FeedEntry.COLUMN_NAME_TIME, date);
             values.put(dbContract.FeedEntry.COLUMN_NAME_PESTS, pests);
-            values.put(dbContract.FeedEntry.COLUMN_NAME_GPS, usableLocation);
-
+            values.put(dbContract.FeedEntry.COLUMN_NAME_GPS, usableLocation.toString());
 
             newRowId = db.insert(
                     dbContract.FeedEntry.TABLE_NAME,
@@ -529,10 +557,7 @@ public class SampleSelection extends AppCompatActivity {
 
 
             try {
-                InputStreamEntity reqEntity = new InputStreamEntity(
-                        new FileInputStream(file), -1);
-                reqEntity.setContentType("binary/octet-stream");
-                httppost.setEntity(reqEntity);
+                httppost.setEntity((new ByteArrayEntity(postMessage.toString().getBytes("UTF8"))));
                 response = httpclient.execute(httppost);
                 code=response.getStatusLine().getStatusCode();
 

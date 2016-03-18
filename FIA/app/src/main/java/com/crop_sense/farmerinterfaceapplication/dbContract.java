@@ -2,6 +2,8 @@ package com.crop_sense.farmerinterfaceapplication;
 
 import android.provider.BaseColumns;
 
+import org.json.JSONObject;
+
 /**
  * Created by Nima on 11/20/2015.
  */
@@ -19,6 +21,7 @@ public final class dbContract {
         public static final String COLUMN_NAME_TIME = "time";
         public static final String COLUMN_NAME_GPS = "gps";
         public static final String COLUMN_NAME_PESTS = "pests";
+        public static final String COLUMN_NAME_PHONE = "phone";
     }
 
 }

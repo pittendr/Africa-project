@@ -9,6 +9,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class LocationService extends Service
 {
     private LocationManager mLocationManager = null;
@@ -19,7 +22,7 @@ public class LocationService extends Service
     SharedPreferences.Editor edit;
     SharedPreferences savedTime;
     SharedPreferences.Editor editTime;
-    String usableLocation = "No Location Detected";
+    JSONObject usableLocation = new JSONObject();
 
     private class LocationListener implements android.location.LocationListener{
 
@@ -34,8 +37,13 @@ public class LocationService extends Service
 
             savedLocation = getSharedPreferences("location", MODE_PRIVATE);
             edit = savedLocation.edit();
-            usableLocation = "Latitude: "+ String.valueOf(mLastLocation.getLatitude())+", Longitude: "+ String.valueOf(mLastLocation.getLongitude())+", Accuracy: "+ String.valueOf(mLastLocation.getAccuracy()) + ", Bearing: " + String.valueOf(mLastLocation.getBearing());
-            edit.putString("locationAddress", usableLocation);
+            try {
+                usableLocation.put("latitude", String.valueOf(mLastLocation.getLatitude()));
+                usableLocation.put("longitude", String.valueOf(mLastLocation.getLongitude()));
+            }catch(JSONException e){
+                //TODO
+            }
+            edit.putString("locationAddress", usableLocation.toString());
             edit.apply();
 
             savedTime = getSharedPreferences("time", MODE_PRIVATE);
