@@ -1,55 +1,68 @@
 #!../../esenv/bin/python
 from flask import Flask, jsonify, request 
 import MySQLdb
+import simplejson
+import pyowm
+import urllib
 
 app = Flask(__name__)
 conn = MySQLdb.connect(host = "localhost", user = "eis", passwd = "188esplanade", db="expertsystem")
+
+googleapikey = 'AIzaSyBaIP0AbBO1GgS8q9i28FQGd8HopCMNES0'
+weatherapikey = 'cdb2f4f903237bca966049d773d2e06e'
 
 @app.route('/data', methods=['POST'])
 def create_task():
     if not request.json or not 'gps' in request.json or not 'phone' in request.json or not 'pests' in request.json or not 'aid' in request.json or not 'mac' in request.json or not 'serial' in request.json or not 'time' in request.json:
         abort(400)
-    data = {
-        'phone': request.json['phone'],
-        'gps': request.json['gps'],
-        'pests': request.json['pest'],
-	'aid': request.json['aid'],
-	'mac': request.json['mac'],
-	'serial': request.json['serial'],
-	'time': request.json['serial']
-    }
-    
-    latitude = data.gps.json['latitude']
-    longitude = data.gps.json['longitude']
 
-    url = 'https://maps.googleapis.com/maps/api/elevation/json?locations='+str(latitude)+','+str(longitude)+'&key='+str(googleapikey)
-    response = simplejson.load(urllib.urlopen(url))
+    latitude = '49.2324'#request.json['gps'][0]['latitude']
+    longitude = '-123.231'#request.json['gps'][0]['longitude']
+
+    url = 'https://maps.googleapis.com/maps/api/elevation/json?locations='+str(latitude)+','+str(longitude)+'&key=AIzaSyBaIP0AbBO1GgS8q9i28FQGd8HopCMNES0'
+    resp = simplejson.load(urllib.urlopen(url))
     elevationarray = []
-    for resultset in response['results']:
+    for resultset in resp['results']:
         elevationarray.append(resultset['elevation'])
-    elevation = elevationArray[0]
+    elevation = elevationarray[0]
 
-    owm = pyowm.OWM(str(weatherapikey))
-    observation = owm.weather_at_coord(latitude, longitude)
+    owm = pyowm.OWM('cdb2f4f903237bca966049d773d2e06e')
+    observation = owm.weather_at_coords(float(latitude), float(longitude))
     weather = observation.get_weather()
     windspeed = weather.get_wind()['speed']
     winddir = weather.get_wind()['deg']
     humidity = weather.get_humidity()
     temp = weather.get_temperature('fahrenheit')['temp']
-    rain = weather.get_rain()
     clouds = weather.get_clouds()
+
+    data = {
+        'phone': request.json['phone'],
+        'gps': request.json['gps'],
+        'pests': request.json['pests'],
+        'aid': request.json['aid'],
+        'mac': request.json['mac'],
+        'serial': request.json['serial'],
+        'time': request.json['time'],
+        'elevation':elevation,
+        'windspeed': windspeed,
+        'winddir': winddir,
+        'humidity': humidity,
+        'temp': temp,
+        'clouds': clouds
+    }
 
     x=conn.cursor()
 
     try:
-        x.execute("""INSERT INTO fia(phone, gps, pests, aid, mac, serial, time, elevation, windspeed, winddir, humidity, temp, rain, clouds) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", (data.phone, data.gps, data.pests, data.aid, data.mac, data.serial, data.time, elevation, windspeed, winddir, humidity, temp, rain, clouds))
+        x.execute("""INSERT INTO fia(phone, gps, pests, aid, mac, serial, time, elevation, windspeed, winddir, humidity, temp, clouds) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", (data['phone'],data['gps'], data['pests'], data['aid'], data['mac'], data['serial'], data['time'], elevation, windspeed, winddir, humidity, temp, clouds))
         conn.commit()
-    except:
+    except Exception, Argument:
+        print Argument
         conn.rollback()
 
     conn.close()
     
-    return jsonify({'data': data}), 201 
+    return jsonify({'data':data}),201 
 
 if __name__ == '__main__':
     app.run("0.0.0.0",8080)
