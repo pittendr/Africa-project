@@ -48,8 +48,10 @@ import android.widget.VideoView;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -86,6 +88,8 @@ public class MainScreen extends AppCompatActivity {
     ArrayList<String[]> arrList = new ArrayList<String[]>();
     int count =0;
 
+    JSONObject postMessage = new JSONObject();
+
     boolean done;
 
     @Override
@@ -108,9 +112,9 @@ public class MainScreen extends AppCompatActivity {
             createOldSoundPool();
         }
 
-
         settings = getSharedPreferences("ip", MODE_PRIVATE);
         ipString = settings.getString("ipAddress", ipString);
+
 
         soundId = soundPool.load(getApplicationContext(), R.raw.buttonclick, 1);
         final CustomMediaController mediaController = new CustomMediaController(this, true);
@@ -163,7 +167,7 @@ public class MainScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainScreen.this);
-                builder.setTitle("Please Enter the ODK Server IP Address:");
+                builder.setTitle("Please Enter the API address:");
                 final EditText input = new EditText(MainScreen.this);
                 input.setText(ipString);
                 input.setInputType(InputType.TYPE_CLASS_PHONE);
@@ -343,7 +347,7 @@ public class MainScreen extends AppCompatActivity {
 
     private class postRequest extends AsyncTask<String, Void, String> {
 
-        String url ="http://"+ipString+"/submission";
+        String url ="http://"+ipString+":8080/data";
 
         HttpClient httpclient = new DefaultHttpClient();
 
@@ -356,10 +360,8 @@ public class MainScreen extends AppCompatActivity {
 
 
             try {
-                InputStreamEntity reqEntity = new InputStreamEntity(
-                        new FileInputStream(file), -1);
-                reqEntity.setContentType("binary/octet-stream");
-                httppost.setEntity(reqEntity);
+                httppost.setEntity((new ByteArrayEntity(postMessage.toString().getBytes("UTF8"))));
+                httppost.setHeader("Content-type", "application/json");
                 response = httpclient.execute(httppost);
                 //code = EntityUtils.toString(response.getEntity());
                 code=response.getStatusLine().getStatusCode();
@@ -380,7 +382,7 @@ public class MainScreen extends AppCompatActivity {
                 db.delete("test2", "_id = ?", new String[]{arrList.get(count)[0]});
             }
             count++;
-            writeXml(count);
+            writeJSON(count);
 
         }
         @Override
@@ -390,8 +392,8 @@ public class MainScreen extends AppCompatActivity {
 
     }
 
-    private void writeXml(int cnt){
-        try {
+    private void writeJSON(int cnt){
+        /*try {
             if(cnt>=arrList.size()){
                 done = true;
                 return;
@@ -402,6 +404,22 @@ public class MainScreen extends AppCompatActivity {
             new postRequest().execute();
         } catch (Exception e) {
             //TODO
+        }*/
+        try{
+            if(cnt>=arrList.size()){
+                done = true;
+                return;
+            }
+            postMessage.put("phone", arrList.get(cnt)[1]);
+            postMessage.put("gps", arrList.get(cnt)[6]);
+            postMessage.put("aid", arrList.get(cnt)[4]);
+            postMessage.put("mac", arrList.get(cnt)[2]);
+            postMessage.put("serial", arrList.get(cnt)[3]);
+            postMessage.put("time", arrList.get(cnt)[5]);
+            postMessage.put("pests", arrList.get(cnt)[7]);
+            new postRequest().execute();
+        }catch(Exception e){
+            //TODO
         }
     }
 
@@ -409,37 +427,44 @@ public class MainScreen extends AppCompatActivity {
 
         getSQLdata();
 
-        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "fiadata.xml");
+        /*file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "fiadata.xml");
         if (!file.exists()){
             try {
                 file.createNewFile();
             }catch (Exception e){
                 //TODO
             }
-        }
+        }*/
 
-        writeXml(count);
+        writeJSON(count);
 
-    }
-
-    private void RequestPermissions(){
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        }
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        }
     }
 
     @Override
     protected void onStart(){
-        RequestPermissions();
+        if(android.os.Build.VERSION.SDK_INT >= 23) {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+        }
         super.onStart();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+        }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_SMS}, 1);
+        }
+    }
 
 
 

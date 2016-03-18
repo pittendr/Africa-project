@@ -482,14 +482,12 @@ public class SampleSelection extends AppCompatActivity {
             postMessage.put("serial", serialNumber);
             postMessage.put("time", date);
             postMessage.put("pests", pests);
-
+            new postRequest().execute();
         }catch(Exception e){
             //TODO
         }
 
 
-
-        new postRequest().execute();
     }
 
 
@@ -544,7 +542,7 @@ public class SampleSelection extends AppCompatActivity {
 
     private class postRequest extends AsyncTask<String, Void, String>{
 
-        String url ="http://"+server+"/submission";
+        String url ="http://"+server+":8080/data";
 
         HttpClient httpclient = new DefaultHttpClient();
 
@@ -558,6 +556,7 @@ public class SampleSelection extends AppCompatActivity {
 
             try {
                 httppost.setEntity((new ByteArrayEntity(postMessage.toString().getBytes("UTF8"))));
+                httppost.setHeader("Content-type", "application/json");
                 response = httpclient.execute(httppost);
                 code=response.getStatusLine().getStatusCode();
 

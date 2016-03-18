@@ -2,46 +2,46 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Nima\Desktop\FIA\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jar="C:\Users\Nima\Desktop\Africa-project\FIA\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
-        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\release\classes-f97ff19c5854b5649805cf4a80225dec5d878722.jar" />
+        <dex dex="C:\Users\Nima\Desktop\Africa-project\FIA\app\build\intermediates\pre-dexed\debug\classes-c060324e898bbe221d13dcbb4864abb6bbf258fe.jar" />
     </item>
     <item
-        jar="C:\Users\Nima\Desktop\FIA\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
+        jar="C:\Users\Nima\Desktop\Africa-project\FIA\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="C:\Users\Nima\Desktop\Africa-project\FIA\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-54db29ad6685ac71113a0a10fe2128ac5018d483.jar" />
+    </item>
+    <item
+        jar="C:\Users\Nima\Desktop\Africa-project\FIA\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
-        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\release\classes-f7a9668362642c478bfd9bd5bee7f55017ecc435.jar" />
-    </item>
-    <item
-        jar="C:\Users\Nima\Desktop\FIA\app\libs\httpcore-4.4.3.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="e876a79d561e5c6207b78d347e198c8c4531a5e5">
-        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\release\httpcore-4.4.3-149ce63fb2fd4040429b1516f3eae7e3d8121a54.jar" />
+        <dex dex="C:\Users\Nima\Desktop\Africa-project\FIA\app\build\intermediates\pre-dexed\debug\classes-c328192fccb151e62bf700446cf966a3a5ae812f.jar" />
     </item>
     <item
         jar="C:\Users\Nima\AppData\Local\Android\sdk1\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
-        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\release\support-annotations-23.0.1-c2de547ddb5852ed3a8e51437688afcf477c0e23.jar" />
+        <dex dex="C:\Users\Nima\Desktop\Africa-project\FIA\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-c2de547ddb5852ed3a8e51437688afcf477c0e23.jar" />
     </item>
     <item
-        jar="C:\Users\Nima\Desktop\FIA\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
-        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\release\internal_impl-23.0.1-fb5a5debf53b4198b3b9d61b2e98c1c0f25a3d5c.jar" />
-    </item>
-    <item
-        jar="C:\Users\Nima\Desktop\FIA\app\libs\httpclient-4.5.1.jar"
+        jar="C:\Users\Nima\Desktop\Africa-project\FIA\app\libs\httpclient-4.5.1.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="7e3cecc566df91338c6c67883b89ddd05a17db43">
-        <dex dex="C:\Users\Nima\Desktop\FIA\app\build\intermediates\pre-dexed\release\httpclient-4.5.1-cdef01c8c8ce3fb79338e1f4b43433b441733ca6.jar" />
+        <dex dex="C:\Users\Nima\Desktop\Africa-project\FIA\app\build\intermediates\pre-dexed\debug\httpclient-4.5.1-c9e1437b95a591ac9d697d0c991b8da41241996a.jar" />
+    </item>
+    <item
+        jar="C:\Users\Nima\Desktop\Africa-project\FIA\app\libs\httpcore-4.4.3.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="e876a79d561e5c6207b78d347e198c8c4531a5e5">
+        <dex dex="C:\Users\Nima\Desktop\Africa-project\FIA\app\build\intermediates\pre-dexed\debug\httpcore-4.4.3-f5fcf8d51161e29a580edb660ac2b1e636042be1.jar" />
     </item>
 
 </items>
