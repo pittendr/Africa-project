@@ -1,39 +1,11 @@
-function DropDown(el) {
-    this.dd = el;
-    this.placeholder = this.dd.children('span');
-    this.opts = this.dd.find('ul.dropdown > li');
-    this.val = '';
-    this.index = -1;
-    this.initEvents();
-}
-DropDown.prototype = {
-    initEvents : function() {
-        var obj = this;
-
-        obj.dd.on('click', function(event){
-            $(this).toggleClass('active');
-            return false;
-        });
-
-        obj.opts.on('click',function(){
-            var opt = $(this);
-            obj.val = opt.text();
-            obj.index = opt.index();
-            obj.placeholder.text(obj.val);
-        });
-    },
-    getValue : function() {
-        return this.val;
-    },
-    getIndex : function() {
-        return this.index;
-    }
-}
-
-
+var recipeCount = 1;
 $(document).ready(function(){
-	var dd = new DropDown($('#variable_dropdown'));
-	
+	$("#recipe-container").on("click", ".custom-dropdown", function(){
+		$(this).toggleClass('active');
+	});
+	$("#recipe-container").on("click", ".custom-drop li", function(){
+		$(this).parent().parent().find('span').text($(this).text());
+	});
 	$("#recipe-container").on("click", ".andCircle", function(){
 		if(!$(this).hasClass("disabled")){
 			newRecipe();
@@ -41,18 +13,25 @@ $(document).ready(function(){
 		}
 
 	});
-	$(".row").on("click", ".exit", function(){
-		alert("hello")
+	
+	$("#recipe-container").on('mouseleave', '.custom-drop', function(){
+		$(this).parent().removeClass('active');
+	});
+	$(document).on("click", ".exit", function(){
 		$(this).parent().parent().remove();
+		recipeCount--;
+		$('#recipe'+recipeCount).find('.andCircle').removeClass("disabled");
 	});
 	
 })
 
 function newRecipe(){
+	recipeCount++;
 	var container = document.getElementById('recipe-container');
 	
 	var wrapper = document.createElement('div');
 	wrapper.setAttribute("class", "recipe-wrapper");
+	wrapper.setAttribute("id", "recipe"+recipeCount);
 	
 	var row = document.createElement('div');
 	row.setAttribute("class", "row");
@@ -67,22 +46,22 @@ function newRecipe(){
 	var col1 = document.createElement('div');
 	col1.setAttribute("class", "col-sm-3 col-xs-3 col-xs-offset-1 text-center");
 	col1.setAttribute("style", "margin-top:35px");
-	col1.innerHTML="<div id='variable_dropdown' class='custom-dropdown'><span>Variables</span><ul class='custom-drop'><li><a>Test</a></li><li><a>Test</a></li><li><a>Test</a></li></ul></div>"
+	col1.innerHTML="<div id='variable_dropdown"+recipeCount+"' class='custom-dropdown'><span>Variables</span><ul class='custom-drop'><li><a>Elevation</a></li><li><a>Wind Speed</a></li><li><a>Wind Direction</a></li><li><a>Temperature</a></li><li><a>Humidity</a></li><li><a>Rain</a></li><li><a>Cloud Coverage</a></li></ul></div>"
 	
 	var col2 = document.createElement('div');
 	col2.setAttribute("class", "col-sm-1 col-xs-1 text-center");
 	col2.setAttribute("style", "margin-top:10px");
-	col2.innerHTML='<div class="circle-wrapper"><div class="circle"><p>></p></div><div class="circle"><p>=</p></div><div class="circle"><p><</p></div></div>'
+	col2.innerHTML='<div id="circle+'+recipeCount+'" class="circle-wrapper"><div class="circle"><p>></p></div><div class="circle"><p>=</p></div><div class="circle"><p><</p></div></div>'
 	
 	var col3 = document.createElement('div');
     col3.setAttribute("class", "col-sm-3 col-xs-3 text-center");
 	col3.setAttribute("style", "margin-top:35px");
-    col3.innerHTML='<input type="number" placeholder="Value" id="recipe_value">'
+    col3.innerHTML='<input type="number" placeholder="Value" id="recipe_value'+recipeCount+'">'
 	
 	var col4 = document.createElement('div');
 	col4.setAttribute("class", "col-sm-3 col-xs-3 text-center");
 	col4.setAttribute("style", "margin-top:35px");
-	col4.innerHTML='<input type="number" placeholder="Range" id="recipe_range">'
+	col4.innerHTML='<input type="number" placeholder="Range" id="recipe_range'+recipeCount+'">'
 
 	row.appendChild(col1);
 	row.appendChild(col2);
@@ -91,12 +70,14 @@ function newRecipe(){
 	
 	wrapper.appendChild(row);
 	
-	container.appendChild(wrapper);
-	
 	var andCircle = document.createElement("div");
 	andCircle.setAttribute("class", "andCircle");
 	andCircle.innerHTML="+";
 	
-	container.appendChild(andCircle);
+	wrapper.appendChild(andCircle);
+	
+	container.appendChild(wrapper);
+	
+	
 	
 }
