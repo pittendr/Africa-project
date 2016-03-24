@@ -1,0 +1,10 @@
+{% if recipes %}
+	{% for recipe in recipes %}
+	<tr>
+		<td>{{recipe.recipe_variable}}</td>
+		<td>{{recipe.logic_operator}}</td>
+		<td>{{recipe.recipe_limit}}</td>
+		<td>{{recipe.recipe_range}}</td>
+	</tr>
+	{% endfor %}
+{% endif %}

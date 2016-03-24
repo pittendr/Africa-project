@@ -6,7 +6,6 @@
   	<meta name="author" content="Galenic">
 
   	<link rel="stylesheet" href="/static/notifications/css/bootstrap.css">
-  	<link rel="stylesheet" href="/static/notifications/css/bootstrap-select.css">
   	<link rel="stylesheet" href="/static/notifications/css/index.css">
   	<link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
   	
@@ -14,7 +13,6 @@
 
   	<script src="/static/notifications/js/jquery.min.js"></script>
   	<script src="/static/notifications/js/bootstrap.min.js"></script>
-  	<script src="/static/notifications/js/bootstrap-select.min.js"></script>
 </head>
 
 <body>
@@ -23,7 +21,7 @@
 		<div id ="recipe1" class = "recipe-wrapper">
 			<div class="row" >
 				<div class="col-sm-3 col-xs-3 col-xs-offset-1 text-center " style="margin-top:35px;">
-					<div id="variable_dropdown" class="custom-dropdown">
+					<div class="custom-dropdown">
 						<span>Variables</span>
 						<ul class="custom-drop">	
 							<li><a>Elevation</a></li>
@@ -38,22 +36,24 @@
 				</div>
 				<div class="col-sm-1 col-xs-1 text-center" style="margin-top:10px;">
 					<div class="circle-wrapper">
-						<div class="circle"><p>></p></div>
-						<div class="circle"><p>=</p></div>
-						<div class="circle"><p><</p></div>
+						<div id="greaterThan" class="circle"><p>></p></div>
+						<div id="equalTo" class="circle"><p>=</p></div>
+						<div id="lessThan" class="circle"><p><</p></div>
 					</div>
 				</div>
 				<div class="col-sm-3 col-xs-3 text-center " style="margin-top:35px;">
 					<input type="number" placeholder="Value" id="recipe_value">
 				</div>
 				<div class="col-sm-3 col-xs-3 text-center" style="margin-top:35px;">
-						<input type="number" placeholder="Range" id="recipe_range">
+					<input type="number" placeholder="Range" id="recipe_range">
 				</div>
 			</div>
 			
 			<div class="andCircle">+</div>
 		</div>
 	</div>
+	
+	<div id="saveButton">Save</div>
 	
 	<div id="recipe-list" class ="container">
 		<div id="headcont">
@@ -68,24 +68,7 @@
 		</div>
 		<div id="tablecont">
 			<table id = "tablebody">
-				<tr>
-					<td>test</td>
-					<td>test</td>
-					<td>test</td>
-					<td>test</td>
-				</tr>
-				<tr>
-					<td>test</td>
-					<td>test</td>
-					<td>test</td>
-					<td>test</td>
-				</tr>
-				<tr>
-					<td>test</td>
-					<td>test</td>
-					<td>test</td>
-					<td>test</td>
-				</tr>
+				{% include "notifications/table.html" %}
 			</table>
 		</div>
 			

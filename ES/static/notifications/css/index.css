@@ -3,6 +3,29 @@ body, html{
 	width:100%;
 	height:100%;
 }
+
+.clicked{
+	background:gray;
+}
+
+#saveButton{
+	text-align:center;
+	min-width:90px;
+    position: relative;
+    width: 30%;
+	padding:10px;
+    background: rgba(255,255,255,1);
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    font-weight: bold;
+    color: #8AA8BD;
+	margin-top:40px;
+	margin-bottom:40px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
 .variable-frame{
 	width:25%;
 	float:left;
@@ -34,12 +57,14 @@ body, html{
 	width:90%;
 	margin: 0 auto;
     color: #8AA8BD;
+	height:200px;
 }
 #headcont{
 	display:block;
 	width:90%;
 	margin: 0 auto;
     color: #8AA8BD;
+	padding-right:17px;
 }
 
 table#tableheader{
@@ -131,6 +156,7 @@ input[type="number"] {
     color: #8AA8BD;	
 	margin-bottom:10px;
 	line-height:25px;
+	cursor:pointer;
 }
 
 .custom-dropdown {
