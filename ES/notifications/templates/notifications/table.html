@@ -1,10 +1,33 @@
 {% if recipes %}
 	{% for recipe in recipes %}
-	<tr>
-		<td>{{recipe.recipe_variable}}</td>
-		<td>{{recipe.logic_operator}}</td>
-		<td>{{recipe.recipe_limit}}</td>
-		<td>{{recipe.recipe_range}}</td>
-	</tr>
+		{% if recipe.multiple = "start" %}
+			<tr>
+				<td class="start">{{recipe.recipe_variable}}</td>
+				<td class="start">{{recipe.logic_operator}}</td>
+				<td class="start">{{recipe.recipe_limit}}</td>
+				<td class="start">{{recipe.recipe_range}}</td>
+			</tr>
+		{% elif recipe.multiple = "middle" %}
+			<tr>
+				<td class="middle">{{recipe.recipe_variable}}</td>
+				<td class="middle">{{recipe.logic_operator}}</td>
+				<td class="middle">{{recipe.recipe_limit}}</td>
+				<td class="middle">{{recipe.recipe_range}}</td>
+			</tr>
+		{% elif recipe.multiple = "end" %}
+			<tr>
+				<td class="end">{{recipe.recipe_variable}}</td>
+				<td class="end">{{recipe.logic_operator}}</td>
+				<td class="end">{{recipe.recipe_limit}}</td>
+				<td class="end">{{recipe.recipe_range}}</td>
+			</tr>
+		{% elif recipe.multiple = "null" %}
+			<tr>
+				<td class="null">{{recipe.recipe_variable}}</td>
+				<td class="null">{{recipe.logic_operator}}</td>
+				<td class="null">{{recipe.recipe_limit}}</td>
+				<td class="null">{{recipe.recipe_range}}</td>
+			</tr>
+		{% endif %}
 	{% endfor %}
 {% endif %}

@@ -1,5 +1,5 @@
 body, html{
-	background: #4c4cff;
+	background: #3855BF;
 	width:100%;
 	height:100%;
 }
@@ -8,62 +8,66 @@ body, html{
 	background:gray;
 }
 
+.value_label, .range_label{
+	color: lightgray;
+    font-weight: bold;
+}
+::-webkit-input-placeholder {
+    color:    #7D92DD;
+}
+:-moz-placeholder { 
+   color:    #7D92DD;
+   opacity:  1;
+}
+::-moz-placeholder { 
+   color:    #7D92DD;
+   opacity:  1;
+}
+:-ms-input-placeholder { 
+   color:    #7D92DD;
+}
+:placeholder-shown {
+  color:    #7D92DD;
+}
+
+#recipe-list{
+	width:70%;
+	margin:0 auto;
+	padding:20px;
+	border-radius:20px;
+	opacity:0.9;
+}
 #saveButton{
 	text-align:center;
-	min-width:90px;
+	min-width:130px;
     position: relative;
     width: 30%;
 	padding:10px;
-    background: rgba(255,255,255,1);
+    background: #CDD5F6;
     border-radius: 5px;
     cursor: pointer;
     outline: none;
     font-weight: bold;
-    color: #8AA8BD;
+    color: #071857;
 	margin-top:40px;
 	margin-bottom:40px;
 	margin-left:auto;
 	margin-right:auto;
 }
-
-.variable-frame{
-	width:25%;
-	float:left;
-	margin-top:35px;
-	text-align:center;
-}
-.circle-frame{
-	width:25%;
-	float:left;
-	margin-top:10px;
-	text-align:center;
-}
-.value-frame{
-	width:25%;
-	float:left;
-	margin-top:35px;
-	text-align:center;
-}
-.range-frame{
-	width:25%;
-	float:left;
-	margin-top:35px;
-	text-align:center;
-}
 #tablecont{
 	height:30%;
 	overflow:auto;
 	display:block;
-	width:90%;
+	width:100%;
 	margin: 0 auto;
-    color: #8AA8BD;
+    color: #CDD5F6;
 	height:200px;
 }
 #headcont{
 	display:block;
-	width:90%;
+	width:100%;
 	margin: 0 auto;
-    color: #8AA8BD;
+    color: #CDD5F6;
 	padding-right:17px;
 }
 
@@ -81,11 +85,35 @@ th{
 	padding:15px;
 }
 
-td {
+td.start {
+	text-align:center;
+	border-width: 1px 0px 0px 0px;
+	border-style:solid;
+	border-color:#7D92DD;
+	width:25%;
+	padding:15px;
+}
+td.middle {
+	text-align:center;
+	border-width: 0px 0px 0px 0px;
+	border-style:solid;
+	border-color:#7D92DD;
+	width:25%;
+	padding:15px;
+}
+td.end {
+	text-align:center;
+	border-width: 0px 0px 1px 0px;
+	border-style:solid;
+	border-color:#7D92DD;
+	width:25%;
+	padding:15px;
+}
+td.null {
 	text-align:center;
 	border-width: 1px 0px 1px 0px;
 	border-style:solid;
-	border-color:white;
+	border-color:#7D92DD;
 	width:25%;
 	padding:15px;
 }
@@ -101,7 +129,7 @@ td {
 	top:-5px;
 	right:-5px;
 	font-size:20px;
-	color:rgba(255,255,255,0.8);
+	color:#CDD5F6;
 	cursor: pointer;
 }
 .recipe-wrapper{
@@ -112,12 +140,12 @@ td {
 	position:relative;
 	width:40px;
 	height:40px;
-	background: rgba(255,255,255,1);
+	background:#CDD5F6;
     border-radius: 25px;
     cursor: pointer;
     outline: none;
     font-weight: bold;
-    color: #8AA8BD;
+    color: #071857;
 	line-height:40px;
 	text-align:center;
 	font-size:30px;
@@ -128,19 +156,19 @@ td {
 	
 }
 input[type="number"] {
-	min-width:90px;
+	min-width:130px;
 	text-align:center;
     position: relative;
     width: 80%;
     margin: 0 auto;
 	padding:10px;
 	padding-right:0px !important;
-    background: rgba(255,255,255,1);
+    background: #CDD5F6;
     border-radius: 5px;
     outline: none;
     font-weight: bold;
 	border:none;
-    color: #8AA8BD;
+    color: #071857;
 }
 .circle {
 	width: 25px;
@@ -149,28 +177,41 @@ input[type="number"] {
     overflow:hidden;
     position: relative;
     margin: 0 auto;
-    background: rgba(255,255,255,1);
+    background: #CDD5F6;
     outline: none;
     font-weight: bold;
 	border:none;
-    color: #8AA8BD;	
+    color: #071857;	
 	margin-bottom:10px;
 	line-height:25px;
 	cursor:pointer;
 }
 
 .custom-dropdown {
-	min-width:90px;
+	min-width:130px;
     position: relative;
     width: 80%;
     margin: 0 auto;
 	padding:10px;
-    background: rgba(255,255,255,1);
+    background: #CDD5F6;
     border-radius: 5px;
     cursor: pointer;
     outline: none;
     font-weight: bold;
-    color: #8AA8BD;
+    color: #071857;
+}
+
+.custom-dropdown:after{
+	position:absolute;
+	right: 16px;
+    top: 50%;
+	content:"";
+	width: 0; 
+	height: 0; 
+    margin-top: -3px;
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+    border-color: #071857 transparent;
 }
 
 .custom-dropdown .custom-drop {
@@ -179,7 +220,7 @@ input[type="number"] {
     top: 130%;
     left: 0px;
     right: 0;
-    background: white;
+    background: #CDD5F6;
     border-radius: 5px;
     list-style: none;
     opacity: 0;
@@ -192,8 +233,8 @@ input[type="number"] {
 	padding:10px;
 	margin-left:-30px;
 	margin-right:10px;
-    color: #8aa8bd;
-    border-bottom: 1px solid #e6e8ea;
+    color: #071857;
+    border-bottom: 1px solid #7D92DD;
 }
 
 .custom-dropdown .custom-drop li:first-of-type a {
@@ -207,4 +248,8 @@ input[type="number"] {
 .custom-dropdown.active .custom-drop {
     opacity: 1;
 	display:block;
+}
+
+.shadow {
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12), 0 3px 5px -1px rgba(0, 0, 0, .2)
 }

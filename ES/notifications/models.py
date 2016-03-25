@@ -7,5 +7,7 @@ class Recipe(models.Model):
     logic_operator = models.CharField(max_length=40)
     recipe_limit = models.PositiveIntegerField()
     recipe_range = models.PositiveIntegerField()
+    multiple = models.CharField(max_length=40)
+    recipe_match = models.CharField(max_length=40)
 
 # Create your models here.
