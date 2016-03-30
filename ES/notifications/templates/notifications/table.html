@@ -6,6 +6,7 @@
 				<td class="start">{{recipe.logic_operator}}</td>
 				<td class="start">{{recipe.recipe_limit}}</td>
 				<td class="start">{{recipe.recipe_range}}</td>
+				<td class="start">{{recipe.recipe_alert}}</td>
 			</tr>
 		{% elif recipe.multiple = "middle" %}
 			<tr>
@@ -13,6 +14,7 @@
 				<td class="middle">{{recipe.logic_operator}}</td>
 				<td class="middle">{{recipe.recipe_limit}}</td>
 				<td class="middle">{{recipe.recipe_range}}</td>
+				<td class="middle">{{recipe.recipe_alert}}</td>
 			</tr>
 		{% elif recipe.multiple = "end" %}
 			<tr>
@@ -20,6 +22,7 @@
 				<td class="end">{{recipe.logic_operator}}</td>
 				<td class="end">{{recipe.recipe_limit}}</td>
 				<td class="end">{{recipe.recipe_range}}</td>
+				<td class="end">{{recipe.recipe_alert}}</td>
 			</tr>
 		{% elif recipe.multiple = "null" %}
 			<tr>
@@ -27,6 +30,7 @@
 				<td class="null">{{recipe.logic_operator}}</td>
 				<td class="null">{{recipe.recipe_limit}}</td>
 				<td class="null">{{recipe.recipe_range}}</td>
+				<td class="null">{{recipe.recipe_alert}}</td>
 			</tr>
 		{% endif %}
 	{% endfor %}

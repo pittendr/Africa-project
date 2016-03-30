@@ -25,8 +25,9 @@ def data(request):
         range = request.POST['range']
         multiple = request.POST['multiple']
         id = request.POST['id']
+        alert = request.POST['alert']
         
-        recipe = Recipe.objects.create(recipe_variable = variable, logic_operator = operator, recipe_limit = value, recipe_range = range, multiple = multiple, recipe_match = id)
+        recipe = Recipe.objects.create(recipe_variable = variable, logic_operator = operator, recipe_limit = value, recipe_range = range, multiple = multiple, recipe_match = id, recipe_alert=alert)
         recipes = Recipe.objects.all()
         context = {'recipes': recipes}		
         return render(request, 'notifications/table.html', context)

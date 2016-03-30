@@ -5,9 +5,12 @@ $(document).ready(function(){
 	$("#recipe-container").on("click", ".custom-dropdown", function(){
 		$(this).toggleClass('active');
 	});
-	$("#recipe-container").on("click", ".custom-drop li", function(){
-		$(this).closest(".recipe-wrapper").find('span').text($(this).text());
-		setUnits($(this).closest(".recipe-wrapper").find('span').text(), $(this).closest(".recipe-wrapper").find(".value_label"));
+	$("#recipe-container").on("click", "#vardrop .custom-drop li", function(){
+		$(this).closest("#vardrop").find('span').text($(this).text());
+		setUnits($(this).closest("#vardrop").find('span').text(), $(this).closest(".recipe-wrapper").find(".value_label"));
+	});
+	$("#recipe-container").on("click", "#alertdrop .custom-drop li", function(){
+		$(this).closest("#alertdrop").find('span').text($(this).text());
 	});
 	$("#recipe-container").on("click", ".andCircle", function(){
 		if(!$(this).hasClass("disabled")){
@@ -75,12 +78,13 @@ $(document).ready(function(){
 				method: 'POST',
 				url: '/data',
 				data: {
-					'variable' : $("#recipe"+(i)).find('span').text(),
+					'variable' : $("#recipe"+(i)).find('#vardrop span').text(),
 					'operator' : $("#recipe"+(i)).find(".circle.clicked").text(),
 					'value' : $("#recipe"+(i)).find('.recipe_value').val(),
 					'range' : $("#recipe"+(i)).find('.recipe_range').val(),
 					'multiple' : multiple,
 					'id' : id,
+					'alert' : $("#recipe1").find('#alertdrop span').text()
 				},
 				success: function (data) {
 					$('#tablebody').html(data);
@@ -146,9 +150,9 @@ function newRecipe(){
 	row.appendChild(exit);
 	
 	var col1 = document.createElement('div');
-	col1.setAttribute("class", "col-sm-3 col-xs-3 col-xs-offset-1 text-center");
+	col1.setAttribute("class", "col-sm-3 col-xs-3 text-center");
 	col1.setAttribute("style", "margin-top:35px");
-	col1.innerHTML="<div class='custom-dropdown shadow'><span>Variables</span><ul class='custom-drop'><li><a>Elevation</a></li><li><a>Wind Speed</a></li><li><a>Wind Direction</a></li><li><a>Temperature</a></li><li><a>Humidity</a></li><li><a>Rain</a></li><li><a>Cloud Coverage</a></li></ul></div>"
+	col1.innerHTML="<div id='vardrop' class='custom-dropdown shadow'><span>Variables</span><ul class='custom-drop'><li><a>Elevation</a></li><li><a>Wind Speed</a></li><li><a>Wind Direction</a></li><li><a>Temperature</a></li><li><a>Humidity</a></li><li><a>Rain</a></li><li><a>Cloud Coverage</a></li></ul></div>"
 	
 	var col2 = document.createElement('div');
 	col2.setAttribute("class", "col-sm-1 col-xs-1 text-center");
@@ -164,7 +168,7 @@ function newRecipe(){
 	col4.setAttribute("class", "col-sm-3 col-xs-3 text-center");
 	col4.setAttribute("style", "margin-top:35px");
 	col4.innerHTML='<input type="number" placeholder="Range" class="recipe_range shadow"><label class="range_label">&nbsp;km</label>'
-
+   
 	row.appendChild(col1);
 	row.appendChild(col2);
 	row.appendChild(col3);
@@ -185,7 +189,8 @@ function clearRecipes(){
 		$('#recipe'+(i+1)).remove();
 	}
 	$('#recipe1').find('.andCircle').removeClass("disabled");
-	$('#recipe1').find('span').text("Variables")
+	$('#recipe1').find('#vardrop span').text("Variables");
+	$('#recipe1').find('#alertdrop span').text("Alert Type")
 	$('#recipe1').find('.circle').css("background","#CDD5F6");
 	$('#recipe1').find('.circle').css("color","#071857");
 	$('#recipe1').find('.circle').removeClass("clicked");
@@ -199,7 +204,8 @@ function checkRecipes(){
 		if ($('#recipe'+(i+1)).find('span').text()=="Variables" ||
 		!$('#recipe'+(i+1)).find('.circle').hasClass("clicked") ||
 		$('#recipe'+(i+1)).find('.recipe_value').val() == '' ||
-		$('#recipe'+(i+1)).find('.recipe_range').val() == ''){
+		$('#recipe'+(i+1)).find('.recipe_range').val() == '' ||
+		$('#recipe1').find('#alertdrop span').text()=="Alert Type"){
 			badRecipes.push((i+1));
 		}
 	}

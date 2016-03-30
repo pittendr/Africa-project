@@ -20,8 +20,8 @@
 	<div id="recipe-container" class="container">
 		<div id ="recipe1" class = "recipe-wrapper">
 			<div class="row" >
-				<div class="col-sm-3 col-xs-3 col-xs-offset-1 text-center " style="margin-top:35px;">
-					<div class="custom-dropdown shadow">
+				<div class="col-sm-3 col-xs-3 text-center " style="margin-top:35px;">
+					<div id="vardrop" class="custom-dropdown shadow">
 						<span>Variables</span>
 						<ul class="custom-drop">	
 							<li><a>Elevation</a></li>
@@ -42,11 +42,19 @@
 					</div>
 				</div>
 				<div class="col-sm-3 col-xs-3 text-center" style="margin-top:35px;">
-					
 					<input type="number" placeholder="Value" class="recipe_value shadow"><label class="value_label"></label>
 				</div>
 				<div class="col-sm-3 col-xs-3 text-center" style="margin-top:35px;">
 					<input type="number" placeholder="Range" class="recipe_range shadow"><label class="range_label">&nbsp;km</label>
+				</div>
+				<div class="col-sm-2 col-xs-2 text-center" style="margin-top:35px;">
+					<div id="alertdrop" class="custom-dropdown shadow">
+						<span>Alert Type</span>
+						<ul class="custom-drop">	
+							<li><a>Scout</a></li>
+							<li><a>Spray</a></li>
+						</ul>
+					</div>
 				</div>
 			</div>
 			
@@ -64,6 +72,7 @@
 					<th>Operator</th>
 					<th>Value</th>
 					<th>Range</th>
+					<th>Alert</th>
 				</tr>
 			</table>
 		</div>
