@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -62,7 +63,7 @@ public class SampleSelection extends AppCompatActivity {
 
 
     SharedPreferences settings;
-    String server = "";
+    String server = "104.236.165.100";
 
     ListView listView;
     ListViewAdapter adapter;
@@ -80,7 +81,6 @@ public class SampleSelection extends AppCompatActivity {
 
     EditText searchInput;
 
-    File file;
 
     boolean flag = false;
 
@@ -113,7 +113,10 @@ public class SampleSelection extends AppCompatActivity {
     String pests;
     String phone;
     SharedPreferences savedLocation;
+
+    SharedPreferences savedPhone;
     JSONObject usableLocation = new JSONObject();
+    String op;
 
     SharedPreferences savedTime;
     long usableTime = 0;
@@ -143,6 +146,9 @@ public class SampleSelection extends AppCompatActivity {
         if (!checkService()){
             startService(new Intent(this, LocationService.class));
         }
+
+
+        savedPhone = getSharedPreferences("phone", MODE_PRIVATE);
 
         tmp = (ImageView) findViewById(rectangleViews[countGreen+countRed]);
         tmp.setImageResource(R.drawable.flash);
@@ -453,8 +459,8 @@ public class SampleSelection extends AppCompatActivity {
         }
 
         TelephonyManager tMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-        phone = tMgr.getLine1Number();
-
+        op = tMgr.getNetworkOperatorName();
+        phone = savedPhone.toString();
         androidid = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         serialNumber = Build.SERIAL;
@@ -515,7 +521,11 @@ public class SampleSelection extends AppCompatActivity {
             values.put(dbContract.FeedEntry.COLUMN_NAME_AID, androidid);
             values.put(dbContract.FeedEntry.COLUMN_NAME_TIME, date);
             values.put(dbContract.FeedEntry.COLUMN_NAME_PESTS, pests);
-            values.put(dbContract.FeedEntry.COLUMN_NAME_GPS, usableLocation.toString());
+            if (usableLocation!=null){
+                values.put(dbContract.FeedEntry.COLUMN_NAME_GPS, usableLocation.toString());
+            }else{
+                values.put(dbContract.FeedEntry.COLUMN_NAME_GPS, "null");
+            }
 
             newRowId = db.insert(
                     dbContract.FeedEntry.TABLE_NAME,
@@ -542,7 +552,7 @@ public class SampleSelection extends AppCompatActivity {
 
     private class postRequest extends AsyncTask<String, Void, String>{
 
-        String url ="http://"+server+":8080/data";
+        String url ="http://"+server+"/api";
 
         HttpClient httpclient = new DefaultHttpClient();
 
@@ -573,6 +583,7 @@ public class SampleSelection extends AppCompatActivity {
                 new saveToDb().execute();
             }
             tallyBoxes();
+            Toast.makeText(getApplicationContext(), String.valueOf(code), Toast.LENGTH_SHORT).show();
         }
         @Override
         protected void onProgressUpdate(Void... values){

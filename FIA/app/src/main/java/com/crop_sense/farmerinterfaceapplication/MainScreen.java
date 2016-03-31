@@ -32,6 +32,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -74,11 +75,14 @@ public class MainScreen extends AppCompatActivity {
     ImageView fullscreen;
     int position =0;
 
-    private String ipString = "";
+    private String ipString = "104.236.165.100";
 
     ImageButton ip;
 
     SharedPreferences settings;
+    SharedPreferences install;
+
+    SharedPreferences.Editor installedit;
     SharedPreferences.Editor edit;
 
     LocationManager locationManager = null;
@@ -87,6 +91,7 @@ public class MainScreen extends AppCompatActivity {
     String [] arrData = null;
     ArrayList<String[]> arrList = new ArrayList<String[]>();
     int count =0;
+    String phone = null;
 
     JSONObject postMessage = new JSONObject();
 
@@ -113,6 +118,7 @@ public class MainScreen extends AppCompatActivity {
         }
 
         settings = getSharedPreferences("ip", MODE_PRIVATE);
+        install = getSharedPreferences("install", MODE_PRIVATE);
         ipString = settings.getString("ipAddress", ipString);
 
 
@@ -347,7 +353,7 @@ public class MainScreen extends AppCompatActivity {
 
     private class postRequest extends AsyncTask<String, Void, String> {
 
-        String url ="http://"+ipString+":8080/data";
+        String url ="http://"+ipString+"/api";
 
         HttpClient httpclient = new DefaultHttpClient();
 
@@ -445,6 +451,14 @@ public class MainScreen extends AppCompatActivity {
         if(android.os.Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+            }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_SMS}, 1);
             }
         }
         super.onStart();
@@ -455,17 +469,52 @@ public class MainScreen extends AppCompatActivity {
                                            String permissions[], int[] grantResults) {
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        } else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        } else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+        } else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
-        }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+        } else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_SMS}, 1);
+        }else {
+            if (install.getBoolean("firstrun", true) || install.getString("phone", "").equals("")) {
+                TelephonyManager tMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+                String p = tMgr.getLine1Number();
+                if (p.equals("")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainScreen.this);
+                    builder.setTitle("Please Phone Number:");
+                    builder.setMessage("The FIA app requires your phone number to send notifications of potential pest outbreaks");
+                    final EditText input = new EditText(MainScreen.this);
+                    input.setInputType(InputType.TYPE_CLASS_PHONE);
+                    builder.setView(input);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            phone = input.getText().toString();
+                            installedit = install.edit();
+                            installedit.putString("phone", phone);
+                            installedit.apply();
+                            InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(
+                                    Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(
+                                    Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+                        }
+                    });
+
+                    builder.show();
+                }
+                install.edit().putBoolean("firstrun", false).apply();
+            }
         }
     }
-
-
 
 }
