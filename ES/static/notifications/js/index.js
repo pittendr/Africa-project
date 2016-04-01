@@ -45,8 +45,12 @@ $(document).ready(function(){
 	   
 		if($(this).hasClass("clicked")){
 			$(this).css("background","#3855BF");
+			$('.toolbar').css("visibility", "hidden");
+			
 		}else{
 			$(this).css("background","#071857");
+			$('.toolbar').css("visibility", "visible");
+			$('.toolbar').css('top', $(this).position().top);
 		}
 		$(this).toggleClass("clicked");
 	});
