@@ -36,6 +36,19 @@ $(document).ready(function(){
 			$(this).css("color","#CDD5F6");
 		}
 		$(this).toggleClass("clicked");
+		
+	});
+	
+	$('table').on('click', 'tr', function(){
+		$(this).parent().find('tr').not($(this)).css("background","#3855BF");
+		$(this).parent().find('tr').not($(this)).removeClass("clicked");
+	   
+		if($(this).hasClass("clicked")){
+			$(this).css("background","#3855BF");
+		}else{
+			$(this).css("background","#071857");
+		}
+		$(this).toggleClass("clicked");
 	});
 	var tabledata=null;
 	$(document).on("click", "#saveButton", function(){
@@ -150,22 +163,22 @@ function newRecipe(){
 	row.appendChild(exit);
 	
 	var col1 = document.createElement('div');
-	col1.setAttribute("class", "col-sm-3 col-xs-3 text-center");
+	col1.setAttribute("class", "col-sm-3 col-xs-5 text-center");
 	col1.setAttribute("style", "margin-top:35px");
 	col1.innerHTML="<div id='vardrop' class='custom-dropdown shadow'><span>Variables</span><ul class='custom-drop'><li><a>Elevation</a></li><li><a>Wind Speed</a></li><li><a>Wind Direction</a></li><li><a>Temperature</a></li><li><a>Humidity</a></li><li><a>Rain</a></li><li><a>Cloud Coverage</a></li></ul></div>"
 	
 	var col2 = document.createElement('div');
-	col2.setAttribute("class", "col-sm-1 col-xs-1 text-center");
+	col2.setAttribute("class", "col-sm-1 col-xs-2 text-center");
 	col2.setAttribute("style", "margin-top:10px");
 	col2.innerHTML='<div class="circle-wrapper"><div class="circle shadow"><p>></p></div><div class="circle shadow"><p>=</p></div><div class="circle shadow"><p><</p></div></div>'
 	
 	var col3 = document.createElement('div');
-    col3.setAttribute("class", "col-sm-3 col-xs-3 text-center");
+    col3.setAttribute("class", "col-sm-3 col-xs-5 text-center");
 	col3.setAttribute("style", "margin-top:35px");
     col3.innerHTML='<input type="number" placeholder="Value" class="recipe_value shadow"><label class="value_label"></label>'
 	
 	var col4 = document.createElement('div');
-	col4.setAttribute("class", "col-sm-3 col-xs-3 text-center");
+	col4.setAttribute("class", "col-sm-3 col-xs-6 text-center");
 	col4.setAttribute("style", "margin-top:35px");
 	col4.innerHTML='<input type="number" placeholder="Range" class="recipe_range shadow"><label class="range_label">&nbsp;km</label>'
    

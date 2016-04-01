@@ -149,14 +149,14 @@ def sendSMS(list):
     server.ehlo()
     server.starttls()
     server.ehlo()
-    server.login( 'animasamiei@gmail.com', 'Bloom_123' )
+    server.login( 'fianotificationgenerator@gmail.com', 'expertsystem' )
     for item in list:
         phone = item[0]
         alert = item[1]
         if alert == "Spray":
-            server.sendmail( 'nima', phone+'@sms.fido.ca', 'You need to spray' )
+            server.sendmail( 'eis', phone+'@sms.fido.ca', 'You need to spray' )
         else: 
-            server.sendmail( 'nima', phone+'@sms.fido.ca', 'You need to scout' )
+            server.sendmail( 'eis', phone+'@sms.fido.ca', 'You need to scout' )
 
 if __name__ == '__main__':
     try:
