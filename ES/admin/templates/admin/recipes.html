@@ -1,0 +1,43 @@
+{% if recipes %}
+	{% for recipe in recipes %}
+		{% if recipe.multiple == "start" %}		
+			<li><a>Recipe</a>
+			<div class="recipe-block" style="display:none;">
+			<div style="margin:20px;">
+				<input  placeholder="{{recipe.recipe_variable}}" >
+				<input  placeholder="{{recipe.logic_operator}}" >
+				<input  placeholder="{{recipe.recipe_limit}}" >
+				<input  placeholder="{{recipe.recipe_range}}" >		
+				<input  placeholder="{{recipe.recipe_alert}}" >
+			</div>
+		{% elif recipe.multiple == "middle"%}
+			<div style="margin:20px;">
+				<input  placeholder="{{recipe.recipe_variable}}" >
+				<input  placeholder="{{recipe.logic_operator}}" >
+				<input  placeholder="{{recipe.recipe_limit}}" >
+				<input  placeholder="{{recipe.recipe_range}}" >
+			</div>
+		{% elif recipe.multiple == "end"%}
+			<div style="margin:20px;">
+				<input  placeholder="{{recipe.recipe_variable}}" >
+				<input  placeholder="{{recipe.logic_operator}}" >
+				<input  placeholder="{{recipe.recipe_limit}}" >
+				<input  placeholder="{{recipe.recipe_range}}" >
+			</div>
+			<button style="margin-left:20px; margin-top:-15px; margin-bottom:20px;">Save</button>
+			</div></li>
+		{% elif recipe.multiple == "null" %}
+			<li><a>Recipe</a>
+			<div class="recipe-block" style="display:none;">
+			<div style="margin:20px;">
+				<input  placeholder="{{recipe.recipe_variable}}" >
+				<input  placeholder="{{recipe.logic_operator}}" >
+				<input  placeholder="{{recipe.recipe_limit}}" >
+				<input  placeholder="{{recipe.recipe_range}}" >		
+				<input  placeholder="{{recipe.recipe_alert}}" >
+			</div>
+			<button style="margin-left:20px; margin-top:-15px; margin-bottom:20px;">Save</button>
+			</div></li>
+		{% endif %}
+	{% endfor %}
+{% endif %}

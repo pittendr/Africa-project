@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework import generics
 from api.models import FIA
 from api.serializers import FIASerializer
 from django.http import Http404
@@ -14,7 +15,7 @@ class FIAList(APIView):
         serializer = FIASerializer(fia, many=True)
         return Response(serializer.data)
     def post(self, request, format=None):
-        req =request.data
+        req = request.data
 		
         latitude = str(json.loads(request.data['gps'])['latitude'])
         longitude = str(json.loads(request.data['gps'])['longitude'])
@@ -51,30 +52,9 @@ class FIAList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class FIADetail(APIView):
-    def get_object(self, pk):
-        try:
-            fia = FIA.objects.get(pk=pk)
-        except fia.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-			
-    def get(self, request, pk, format=None):
-        fia = self.get_object(pk)
-        serializer = FIASerializer(fia)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        fia = self.get_object(pk)
-        serializer = FIASerializer(fia, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, pk, format=None):
-        fia = self.get_object(pk)	
-        fia.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class FIADetail(generics.RetrieveAPIView):
+    queryset = FIA.objects.all()
+    serializer_class = FIASerializer
 		
 
 		

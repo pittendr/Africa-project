@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import simplejson as json
 from notifications.models import Recipe
@@ -6,6 +6,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 @ensure_csrf_cookie
 def index(request):
+    if not request.user.is_authenticated():
+        return redirect('%s?next=%s' % ('../login', request.path))
     recipes = Recipe.objects.all()
     last = Recipe.objects.last();
     if last != None:

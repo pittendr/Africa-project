@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from notifications.models import Recipe
 
-# Create your views here.
+def index(request):
+    if not request.user.is_authenticated():
+        return redirect('%s?next=%s' % ('../login', request.path))
+		
+    recipes = Recipe.objects.all()
+    context = {'recipes' : recipes}
+    return render(request, 'admin/index.html', context)

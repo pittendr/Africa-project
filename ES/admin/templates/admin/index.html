@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<meta name="author" content="Galenic">
+
+  	<link rel="stylesheet" href="/static/admin/css/bootstrap.css">
+  	<link rel="stylesheet" href="/static/admin/css/index.css">
+  	<link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+  	
+  	<title>Admin Page</title>
+
+  	<script src="/static/admin/js/jquery.min.js"></script>
+  	<script src="/static/admin/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+	<div class="text-center"><h3> Admin Page </h3></div>
+	<div id="recipe-container" class="container">
+		<div class="panel-group">
+		    <div class="panel panel-default">
+			  <div class="panel-body" id="panelhead">Edit/Delete Recipes</div>
+			  <div class="panel-footer" id="panelfoot" style="display:none">
+				<ul>
+					{% include "admin/recipes.html" %}
+				</ul>
+			  </div>
+			</div>
+		    <div class="panel panel-default">
+			  <div class="panel-body" id="panelhead">Edit/Delete Users</div>
+			  <div class="panel-footer" id="panelfoot" style="display:none">
+				<ul>
+					{% include "admin/users.html" %}
+				</ul>
+			  </div>
+			</div>
+		</div>
+	</div>
+	
+	<script src="/static/admin/js/index.js"  type="text/javascript"></script>
+</body>
+
+</html>

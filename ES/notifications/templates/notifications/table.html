@@ -1,6 +1,6 @@
 {% if recipes %}
 	{% for recipe in recipes %}
-		{% if recipe.multiple = "start" %}
+		{% if recipe.multiple == "start" %}
 			<tr>
 				<td class="start">{{recipe.recipe_variable}}</td>
 				<td class="start">{{recipe.logic_operator}}</td>
@@ -8,7 +8,7 @@
 				<td class="start">{{recipe.recipe_range}}</td>
 				<td class="start">{{recipe.recipe_alert}}</td>
 			</tr>
-		{% elif recipe.multiple = "middle" %}
+		{% elif recipe.multiple == "middle" %}
 			<tr>
 				<td class="middle">{{recipe.recipe_variable}}</td>
 				<td class="middle">{{recipe.logic_operator}}</td>
@@ -16,7 +16,7 @@
 				<td class="middle">{{recipe.recipe_range}}</td>
 				<td class="middle">{{recipe.recipe_alert}}</td>
 			</tr>
-		{% elif recipe.multiple = "end" %}
+		{% elif recipe.multiple == "end" %}
 			<tr>
 				<td class="end">{{recipe.recipe_variable}}</td>
 				<td class="end">{{recipe.logic_operator}}</td>
@@ -24,7 +24,7 @@
 				<td class="end">{{recipe.recipe_range}}</td>
 				<td class="end">{{recipe.recipe_alert}}</td>
 			</tr>
-		{% elif recipe.multiple = "null" %}
+		{% elif recipe.multiple == "null" %}
 			<tr>
 				<td class="null">{{recipe.recipe_variable}}</td>
 				<td class="null">{{recipe.logic_operator}}</td>
