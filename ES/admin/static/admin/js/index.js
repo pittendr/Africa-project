@@ -60,11 +60,12 @@ $(document).ready(function(){
 					"recipe_alert" : $('#'+id).parent().find('#alertdrop span').text(),
 				},
 				success: function (data) {
-					alert("success");
 					console.log("success", data);
 					if (i<recipeId.length-1){
 						i++;
 						ajaxPut(i);
+					}else{
+						alert("success");
 					}
 				},
 				error: function (data) {

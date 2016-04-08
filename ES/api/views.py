@@ -53,16 +53,19 @@ class FIAList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class FIADetail(generics.RetrieveAPIView):
+class FIADetail(generics.RetrieveAPIView):    
     queryset = FIA.objects.all()
     serializer_class = FIASerializer
 	
 class RecipeList(generics.ListCreateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+		
 class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-		
 
 		

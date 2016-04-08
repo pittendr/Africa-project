@@ -87,13 +87,13 @@ $(document).ready(function(){
 	
 	var tabledata=null;
 	$(document).on("click", "#saveButton", function(){
-		name = prompt("Please enter the name of your Recipe");
-		if(name=="null"){
-			name = "Recipe";
-		}
 		var i=1;
 		var badRecipes = checkRecipes();
 		if(typeof badRecipes == 'undefined' || badRecipes.length ==0){
+			name = prompt("Please enter the name of your Recipe");
+			if(name=="null"){
+				name = "Recipe";
+			}
 			ajaxCall(i);
 		}else{
 			if (badRecipes.length == 1){

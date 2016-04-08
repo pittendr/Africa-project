@@ -11,5 +11,4 @@ class Recipe(models.Model):
     recipe_match = models.CharField(max_length=255)
     recipe_alert = models.CharField(max_length=255)
     recipe_name = models.CharField(max_length=255)
-
 # Create your models here.
