@@ -3,6 +3,67 @@ body, html{
 	width:100%;
 	height:100%;
 }
+.tile{
+	background:gray;
+	padding:3px;
+    background: #CDD5F6;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    font-weight: bold;
+    color: #071857;
+	margin:2px;
+	width:140px;
+}
+#variable-box{
+	margin:20px;
+	padding:10px;
+	background:white;
+	display:inline-block;
+}
+#drop-box{
+	width:200px;
+	height:200px;
+	background:white;
+	top:0;
+	left:400px;
+}
+.recipeCircle {
+	position: relative;
+	border-radius: 50%;
+	width:9%;
+	height: auto;
+	padding-top: 9%;
+	background: blue;
+	float:left;
+	margin:20px;
+}
+.scoutSquare{
+	height:50%;
+	width:10%;
+	right:0;
+	top:0;
+	position:absolute;
+	background:black;
+	border:3px solid gray;
+}
+.spraySquare{
+	height:50%;
+	width:10%;
+	right:0;
+	bottom:0;
+	position:absolute;
+	background:black;
+	border:3px solid gray;
+}
+.varSquare{
+	height:12.5%;
+	width:150px;
+	background:black;
+	border:3px solid gray;
+	float:left;
+}
+
 .value_label, .range_label{
 	color: lightgray;
     font-weight: bold;
@@ -31,7 +92,7 @@ body, html{
 	padding:20px;
 	border-radius:20px;
 	opacity:0.9;
-	height:300px;
+	height:200px;
 	position:relative;
 }
 #saveButton{
@@ -112,9 +173,6 @@ td.null {
 	border-color:#7D92DD;
 	width:25%;
 	padding:15px;
-}
-#recipe-container{
-	margin-top:10px;
 }
 .disabled{
 	cursor: default;
@@ -244,6 +302,25 @@ input[type="number"] {
 .custom-dropdown.active .custom-drop {
     opacity: 1;
 	display:block;
+}
+
+.recipeDisplay{
+    display: inline;
+    position: relative;
+}
+
+.recipeDisplay:hover:after{
+    background: #333;
+    background: rgba(0,0,0,.8);
+    border-radius: 5px;
+    color: #fff;
+    content: attr(tool);
+	top:0px;
+    left: 20%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+	width:200px;
 }
 
 .shadow {

@@ -1,43 +1,131 @@
 {% if recipes %}
 	{% for recipe in recipes %}
 		{% if recipe.multiple == "start" %}		
-			<li><a>Recipe</a>
-			<div class="recipe-block" style="display:none;">
-			<div style="margin:20px;">
-				<input  placeholder="{{recipe.recipe_variable}}" >
-				<input  placeholder="{{recipe.logic_operator}}" >
-				<input  placeholder="{{recipe.recipe_limit}}" >
-				<input  placeholder="{{recipe.recipe_range}}" >		
-				<input  placeholder="{{recipe.recipe_alert}}" >
-			</div>
+			<li><a>{{recipe.recipe_name}}</a>
+				<div class="recipe-block" style="display:none;">
+					<div id ="{{recipe.id}}" class="row" style="margin:20px; display:inline-block">
+						<div id="vardrop" class="custom-dropdown shadow" style="float:left; margin:5px;">
+							<span>{{recipe.recipe_variable}}</span>
+							<ul class="custom-drop">	
+								<li><a>Elevation</a></li>
+								<li><a>Wind Speed</a></li>
+								<li><a>Wind Direction</a></li>
+								<li><a>Temperature</a></li>
+								<li><a>Humidity</a></li>
+								<li><a>Rain</a></li>
+								<li><a>Cloud Coverage</a></li>
+							</ul>
+						</div>
+						<div id="logicdrop" class="custom-dropdown shadow"style="float:left; margin:5px;">
+							<span>{{recipe.logic_operator}}</span>
+							<ul class="custom-drop">	
+								<li><a><</a></li>
+								<li><a>=</a></li>
+								<li><a>></a></li>
+							</ul>
+						</div>
+						<input type="number" class="recipe_value" value="{{recipe.recipe_limit}}" style="float:left; margin:5px;">
+						<input type="number" class="recipe_range" value="{{recipe.recipe_range}}" style="float:left; margin:5px;">		
+					</div>
 		{% elif recipe.multiple == "middle"%}
-			<div style="margin:20px;">
-				<input  placeholder="{{recipe.recipe_variable}}" >
-				<input  placeholder="{{recipe.logic_operator}}" >
-				<input  placeholder="{{recipe.recipe_limit}}" >
-				<input  placeholder="{{recipe.recipe_range}}" >
-			</div>
+					<div id ="{{recipe.id}}" class="row" style="margin:20px; display:inline-block">
+						<div id="vardrop" class="custom-dropdown shadow" style="float:left; margin:5px;">
+							<span>{{recipe.recipe_variable}}</span>
+							<ul class="custom-drop">	
+								<li><a>Elevation</a></li>
+								<li><a>Wind Speed</a></li>
+								<li><a>Wind Direction</a></li>
+								<li><a>Temperature</a></li>
+								<li><a>Humidity</a></li>
+								<li><a>Rain</a></li>
+								<li><a>Cloud Coverage</a></li>
+							</ul>
+						</div>
+						<div id="logicdrop" class="custom-dropdown shadow"style="float:left; margin:5px;">
+							<span>{{recipe.logic_operator}}</span>
+							<ul class="custom-drop">	
+								<li><a><</a></li>
+								<li><a>=</a></li>
+								<li><a>></a></li>
+							</ul>
+						</div>
+						<input type="number"  class="recipe_value" value="{{recipe.recipe_limit}}" style="float:left; margin:5px;">
+						<input type="number"  class="recipe_range" value="{{recipe.recipe_range}}" style="float:left; margin:5px;">	
+					</div>
 		{% elif recipe.multiple == "end"%}
-			<div style="margin:20px;">
-				<input  placeholder="{{recipe.recipe_variable}}" >
-				<input  placeholder="{{recipe.logic_operator}}" >
-				<input  placeholder="{{recipe.recipe_limit}}" >
-				<input  placeholder="{{recipe.recipe_range}}" >
-			</div>
-			<button style="margin-left:20px; margin-top:-15px; margin-bottom:20px;">Save</button>
-			</div></li>
+					<div id ="{{recipe.id}}"class="row" style="margin:20px; display:inline-block">
+						<div id="vardrop" class="custom-dropdown shadow" style="float:left; margin:5px;">
+							<span>{{recipe.recipe_variable}}</span>
+							<ul class="custom-drop">	
+								<li><a>Elevation</a></li>
+								<li><a>Wind Speed</a></li>
+								<li><a>Wind Direction</a></li>
+								<li><a>Temperature</a></li>
+								<li><a>Humidity</a></li>
+								<li><a>Rain</a></li>
+								<li><a>Cloud Coverage</a></li>
+							</ul>
+						</div>
+						<div id="logicdrop" class="custom-dropdown shadow"style="float:left; margin:5px;">
+							<span>{{recipe.logic_operator}}</span>
+							<ul class="custom-drop">	
+								<li><a><</a></li>
+								<li><a>=</a></li>
+								<li><a>></a></li>
+							</ul>
+						</div>
+						<input type="number"  class="recipe_value" value="{{recipe.recipe_limit}}" style="float:left; margin:5px;">
+						<input type="number"  class="recipe_range" value="{{recipe.recipe_range}}" style="float:left; margin:5px;">		
+						<div  id="alertdrop" class="custom-dropdown shadow" style="float:left; margin:5px;">
+							<span>{{recipe.recipe_alert}}</span>
+							<ul class="custom-drop">	
+								<li><a>Spray</a></li>
+								<li><a>Scout</a></li>
+							</ul>
+						</div>
+					</div>
+					<button class="save" style="margin-left:20px; margin-top:-15px; margin-bottom:20px;">Save</button>
+					<button class="delete" style="margin-left:20px;  margin-top:-15px; margin-bottom:20px;">Delete</button>
+				</div>
+			</li>
 		{% elif recipe.multiple == "null" %}
-			<li><a>Recipe</a>
-			<div class="recipe-block" style="display:none;">
-			<div style="margin:20px;">
-				<input  placeholder="{{recipe.recipe_variable}}" >
-				<input  placeholder="{{recipe.logic_operator}}" >
-				<input  placeholder="{{recipe.recipe_limit}}" >
-				<input  placeholder="{{recipe.recipe_range}}" >		
-				<input  placeholder="{{recipe.recipe_alert}}" >
-			</div>
-			<button style="margin-left:20px; margin-top:-15px; margin-bottom:20px;">Save</button>
-			</div></li>
+			<li><a>{{recipe.recipe_name}}</a>
+				<div class="recipe-block" style="display:none;">
+					<div id ="{{recipe.id}}" class="row" style="margin:20px; display:inline-block">
+						<div id="vardrop" class="custom-dropdown shadow" style="float:left; margin:5px;">
+							<span>{{recipe.recipe_variable}}</span>
+							<ul class="custom-drop">	
+								<li><a>Elevation</a></li>
+								<li><a>Wind Speed</a></li>
+								<li><a>Wind Direction</a></li>
+								<li><a>Temperature</a></li>
+								<li><a>Humidity</a></li>
+								<li><a>Rain</a></li>
+								<li><a>Cloud Coverage</a></li>
+							</ul>
+						</div>
+						<div id="logicdrop" class="custom-dropdown shadow"style="float:left; margin:5px;">
+							<span>{{recipe.logic_operator}}</span>
+							<ul class="custom-drop">	
+								<li><a><</a></li>
+								<li><a>=</a></li>
+								<li><a>></a></li>
+							</ul>
+						</div>
+						<input type="number"  class="recipe_value" value="{{recipe.recipe_limit}}" style="float:left; margin:5px;">
+						<input type="number"  class="recipe_range" value="{{recipe.recipe_range}}" style="float:left; margin:5px;">		
+						<div  id="alertdrop" class="custom-dropdown shadow" style="float:left; margin:5px;">
+							<span>{{recipe.recipe_alert}}</span>
+							<ul class="custom-drop">	
+								<li><a>Spray</a></li>
+								<li><a>Scout</a></li>
+							</ul>
+						</div>
+					</div>
+					<button class="save" style="margin-left:20px;  margin-top:-15px; margin-bottom:20px;">Save</button>
+					<button class="delete" style="margin-left:20px;  margin-top:-15px; margin-bottom:20px;">Delete</button>
+				</div>
+			</li>
 		{% endif %}
 	{% endfor %}
 {% endif %}

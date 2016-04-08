@@ -2,6 +2,52 @@ var recipeCount = 1;
 var csrftoken = getCookie('csrftoken');
 
 $(document).ready(function(){
+	/*addOptions();
+	
+	interact('.draggable').draggable({
+		// enable inertial throwing
+		inertia: true,
+		restrict:{restriction:document.querySelector(".dropzone")},
+
+		// call this function on every dragmove event
+		onmove: dragMoveListener,
+	
+	});
+	interact('.dropzone').dropzone({
+		// only accept elements matching this CSS selector
+		accept: '.draggable',
+		// Require a 75% element overlap for a drop to be possible
+		overlap: 0.75,
+
+		// listen for drop related events:
+
+		ondropactivate: function (event) {
+		// add active dropzone feedback
+		event.target.classList.add('drop-active');
+		},
+		ondragenter: function (event) {
+		var draggableElement = event.relatedTarget,
+			dropzoneElement = event.target;
+
+		// feedback the possibility of a drop
+		dropzoneElement.classList.add('drop-target');
+		draggableElement.classList.add('can-drop');
+		},
+		ondragleave: function (event) {
+		// remove the drop feedback style
+		event.target.classList.remove('drop-target');
+		event.relatedTarget.classList.remove('can-drop');
+		},
+		ondropdeactivate: function (event) {
+		// remove active dropzone feedback
+		event.target.classList.remove('drop-active');
+		event.target.classList.remove('drop-target');
+		}
+	});
+	
+	$("#recipe-box").on('mousedown mouseup', '.tile', function(){
+		
+	});*/
 	$("#recipe-container").on("click", ".custom-dropdown", function(){
 		$(this).toggleClass('active');
 	});
@@ -41,6 +87,10 @@ $(document).ready(function(){
 	
 	var tabledata=null;
 	$(document).on("click", "#saveButton", function(){
+		name = prompt("Please enter the name of your Recipe");
+		if(name=="null"){
+			name = "Recipe";
+		}
 		var i=1;
 		var badRecipes = checkRecipes();
 		if(typeof badRecipes == 'undefined' || badRecipes.length ==0){
@@ -56,7 +106,7 @@ $(document).ready(function(){
 		function ajaxCall(i){
 			var multiple= null;
 			var id = null;
-			var alrt = null;
+			var alrt = $("#recipe1").find('#alertdrop span').text();
 			if(recipeCount==1){
 				multiple = "null";
 				id = "null"
@@ -64,13 +114,10 @@ $(document).ready(function(){
 				id = latest;
 				if(i==1){
 					multiple = "start";
-					alrt = $("#recipe1").find('#alertdrop span').text();
 				}else if(i==recipeCount){
 					multiple = "end";
-					alrt = "";
 				}else{
 					multiple = "middle";
-					alrt = "";
 				}
 			}
 			$.ajaxSetup({
@@ -91,6 +138,7 @@ $(document).ready(function(){
 					'multiple' : multiple,
 					'id' : id,
 					'alert' : alrt,
+					'name' : name,
 				},
 				success: function (data) {
 					$('#tablebody').html(data);
@@ -240,4 +288,36 @@ function setUnits(text, label){
 		label.html("&nbsp;%");
 	}
 }
+
+/*var variables = ["Elevation", "Temperature", "Wind Direction", "Wind Speed", "Humidity", "Rain", "Cloud Coverage", "Genotype"];
+var logic = [">", "=", "<"]
+var digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+function addOptions(){
+	var box = document.getElementById("variable-box");
+	for (i=0; i<variables.length;i++){
+		var tile = document.createElement("div");
+		tile.setAttribute("class", "tile shadow draggable drag-drop");
+		tile.innerHTML = "&nbsp;"+variables[i]+"&nbsp;";
+		box.appendChild(tile);
+	}
+	
+}
+
+function dragMoveListener (event) {
+    var target = event.target,
+        // keep the dragged position in the data-x/data-y attributes
+        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+    // translate the element
+    target.style.webkitTransform =
+    target.style.transform =
+      'translate(' + x + 'px, ' + y + 'px)';
+
+    // update the posiion attributes
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
+}*/
+
+
 

@@ -3,7 +3,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework import generics
 from api.models import FIA
-from api.serializers import FIASerializer
+from notifications.models import Recipe
+from api.serializers import FIASerializer, RecipeSerializer
 from django.http import Http404
 import simplejson as json
 import pyowm
@@ -55,6 +56,13 @@ class FIAList(APIView):
 class FIADetail(generics.RetrieveAPIView):
     queryset = FIA.objects.all()
     serializer_class = FIASerializer
+	
+class RecipeList(generics.ListCreateAPIView):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
+class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
 		
 
 		

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from api.models import FIA  
+from notifications.models import Recipe 
 
 class FIASerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,5 +25,22 @@ class FIASerializer(serializers.ModelSerializer):
         instance.humidity = validated_data.get('humidity', instance.humidity)
         instance.rain = validated_data.get('rain', instance.rain)
         instance.clouds = validated_data.get('clouds', instance.clouds)
+        instance.save()
+        return instance
+		
+class RecipeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = ('id', 'recipe_variable', 'logic_operator', 'recipe_limit', 'recipe_range', 'recipe_alert')
+		
+    def create(self, validated_data):
+        return Recipe.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.recipe_variable = validated_data.get('recipe_variable', instance.recipe_variable)
+        instance.logic_operator = validated_data.get('logic_operator', instance.logic_operator)
+        instance.recipe_limit = validated_data.get('recipe_limit', instance.recipe_limit)
+        instance.recipe_range = validated_data.get('recipe_range', instance.recipe_range)
+        instance.recipe_alert = validated_data.get('recipe_alert', instance.recipe_alert)
         instance.save()
         return instance

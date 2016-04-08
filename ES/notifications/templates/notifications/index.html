@@ -7,16 +7,19 @@
 
   	<link rel="stylesheet" href="/static/notifications/css/bootstrap.css">
   	<link rel="stylesheet" href="/static/notifications/css/index.css">
+  	<link rel="stylesheet" href="/static/notifications/css/animate.css">
   	<link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
   	
   	<title>Recipe Generator</title>
 
   	<script src="/static/notifications/js/jquery.min.js"></script>
   	<script src="/static/notifications/js/bootstrap.min.js"></script>
+  	<script src="/static/notifications/js/interact.min.js"></script>
 </head>
 
 <body>
 
+	
 	<div id="recipe-container" class="container">
 		<div id ="recipe1" class = "recipe-wrapper">
 			<div class="row" >
@@ -59,6 +62,11 @@
 			<div class="andCircle shadow">+</div>
 		</div>
 	</div>
+	<!--<div id="variable-box" class="text-center">
+	</div>
+	
+	<div id="drop-box" class="dropzone">
+	</div>-->
 	
 	<div id="saveButton" class=" shadow">Save</div>
 	
@@ -66,6 +74,7 @@
 		<div id="headcont">
 			<table id = "tableheader">
 				<tr>
+					<th>Name</th>
 					<th>Variable</th>
 					<th>Operator</th>
 					<th>Value</th>
