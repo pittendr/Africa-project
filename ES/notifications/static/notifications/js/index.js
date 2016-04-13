@@ -1,91 +1,81 @@
 var recipeCount = 1;
 var csrftoken = getCookie('csrftoken');
-
+var recipe={};
+var data=[];
+recipeCount=0;
 $(document).ready(function(){
-	/*addOptions();
+	addOptions();
 	
-	interact('.draggable').draggable({
-		// enable inertial throwing
-		inertia: true,
-		restrict:{restriction:document.querySelector(".dropzone")},
-
-		// call this function on every dragmove event
-		onmove: dragMoveListener,
 	
+	var drag = dragula([document.querySelector('#variable-box'), document.querySelector('#drop-box')], {
+		accepts: function (el, target, source, sibling) {
+			if(target == document.querySelector('#variable-box')){
+				return false;
+			}
+			return true;
+		},   
+		copy: true,                     
+		copySortSource: false,
+		removeOnSpill:true,
 	});
-	interact('.dropzone').dropzone({
-		// only accept elements matching this CSS selector
-		accept: '.draggable',
-		// Require a 75% element overlap for a drop to be possible
-		overlap: 0.75,
-
-		// listen for drop related events:
-
-		ondropactivate: function (event) {
-		// add active dropzone feedback
-		event.target.classList.add('drop-active');
-		},
-		ondragenter: function (event) {
-		var draggableElement = event.relatedTarget,
-			dropzoneElement = event.target;
-
-		// feedback the possibility of a drop
-		dropzoneElement.classList.add('drop-target');
-		draggableElement.classList.add('can-drop');
-		},
-		ondragleave: function (event) {
-		// remove the drop feedback style
-		event.target.classList.remove('drop-target');
-		event.relatedTarget.classList.remove('can-drop');
-		},
-		ondropdeactivate: function (event) {
-		// remove active dropzone feedback
-		event.target.classList.remove('drop-active');
-		event.target.classList.remove('drop-target');
-		}
+	var dropbox = $("#drop-box");
+	
+	drag.on('drop', function(el, target, source, sibling){
+		$(el).attr('id', recipeCount);
+		recipeCount++;
+		clicked(el, '.tile');
+		clearValues();
+		data[$(".tile.clicked").attr("id")]=
+				{
+					"logic":"",
+					"value":"",
+					"range":"",
+				};
+		console.log(data[$(".tile.clicked").attr("id")])
 	});
 	
-	$("#recipe-box").on('mousedown mouseup', '.tile', function(){
+	
+	$("#drop-box").on('click', '.tile', function(){
+		clicked(this, ".tile");
+		fillValues($(this).attr('id'));
 		
-	});*/
-	$("#recipe-container").on("click", ".custom-dropdown", function(){
-		$(this).toggleClass('active');
-	});
-	$("#recipe-container").on("click", "#vardrop .custom-drop li", function(){
-		$(this).closest("#vardrop").find('span').text($(this).text());
-		setUnits($(this).closest("#vardrop").find('span').text(), $(this).closest(".recipe-wrapper").find(".value_label"));
-	});
-	$("#recipe-container").on("click", "#alertdrop .custom-drop li", function(){
-		$(this).closest("#alertdrop").find('span').text($(this).text());
-	});
-	$("#recipe-container").on("click", ".andCircle", function(){
-		if(!$(this).hasClass("disabled")){
-			newRecipe();
-			$(this).addClass("disabled");
-		}
-
 	});
 	
-	$("#recipe-container").on('mouseleave', '.custom-drop', function(){
-		$(this).parent().removeClass('active');
+	
+	
+	$("#value-box").on('click', "#delButton", function(){
+		delete data[$(".tile.clicked").attr("id")];
+		$(".tile.clicked").remove();
+		clearValues();
 	});
 	
-	$("#recipe-container").on('click', '.circle', function(){
-		$(this).parent().find('.circle').not($(this)).css("background","#CDD5F6");
-		$(this).parent().find('.circle').not($(this)).css("color","#071857");
-		$(this).parent().find('.circle').not($(this)).removeClass("clicked");
-	    if($(this).hasClass("clicked")){
-			$(this).css("background","#CDD5F6");
-			$(this).css("color","#071857");
+	$("#value-box").on('click', "#addButton", function(){
+		data[$(".tile.clicked").attr("id")]=
+				{
+					"logic":$(".circle.clicked").text(),
+					"value":$("#value-input").val(),
+					"range":$("#range-input").val(),
+				};
+		var text = checkRecipe();
+		if (text!=""){
+			alert(text);
 		}else{
-			$(this).css("background","#071857");
-			$(this).css("color","#CDD5F6");
+			for (var i=0;i<data.length;i++){
+				if(data[i]!=undefined){	
+					console.log(i+": "+data[i]);
+				}
+			}
+			
 		}
-		$(this).toggleClass("clicked");
-		
 	});
 	
-	var tabledata=null;
+	$("#value-box").on('click', ".circle", function(){
+		clicked(this, '.circle');
+	});
+	
+	
+
+	/*var tabledata=null;
 	$(document).on("click", "#saveButton", function(){
 		var i=1;
 		var badRecipes = checkRecipes();
@@ -155,13 +145,7 @@ $(document).ready(function(){
 				}
 			});
 		}
-	});
-	
-	$(document).on("click", ".exit", function(){
-		$(this).parent().parent().remove();
-		recipeCount--;
-		$('#recipe'+recipeCount).find('.andCircle').removeClass("disabled");
-	});
+	});*/
 	
 });
 
@@ -185,86 +169,6 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function newRecipe(){
-	recipeCount++;
-	var container = document.getElementById('recipe-container');
-	
-	var wrapper = document.createElement('div');
-	wrapper.setAttribute("class", "recipe-wrapper");
-	wrapper.setAttribute("id", "recipe"+recipeCount);
-	
-	var row = document.createElement('div');
-	row.setAttribute("class", "row");
-	row.style.position = "relative";
-	
-	var exit = document.createElement('div');
-	exit.setAttribute("class", "exit");
-	exit.innerHTML="x";
-	
-	row.appendChild(exit);
-	
-	var col1 = document.createElement('div');
-	col1.setAttribute("class", "col-sm-3 col-xs-5 text-center");
-	col1.setAttribute("style", "margin-top:35px");
-	col1.innerHTML="<div id='vardrop' class='custom-dropdown shadow'><span>Variables</span><ul class='custom-drop'><li><a>Elevation</a></li><li><a>Wind Speed</a></li><li><a>Wind Direction</a></li><li><a>Temperature</a></li><li><a>Humidity</a></li><li><a>Rain</a></li><li><a>Cloud Coverage</a></li></ul></div>"
-	
-	var col2 = document.createElement('div');
-	col2.setAttribute("class", "col-sm-1 col-xs-2 text-center");
-	col2.setAttribute("style", "margin-top:10px");
-	col2.innerHTML='<div class="circle-wrapper"><div class="circle shadow"><p>></p></div><div class="circle shadow"><p>=</p></div><div class="circle shadow"><p><</p></div></div>'
-	
-	var col3 = document.createElement('div');
-    col3.setAttribute("class", "col-sm-3 col-xs-5 text-center");
-	col3.setAttribute("style", "margin-top:35px");
-    col3.innerHTML='<input type="number" placeholder="Value" class="recipe_value shadow"><label class="value_label"></label>'
-	
-	var col4 = document.createElement('div');
-	col4.setAttribute("class", "col-sm-3 col-xs-6 text-center");
-	col4.setAttribute("style", "margin-top:35px");
-	col4.innerHTML='<input type="number" placeholder="Range" class="recipe_range shadow"><label class="range_label">&nbsp;km</label>'
-   
-	row.appendChild(col1);
-	row.appendChild(col2);
-	row.appendChild(col3);
-	row.appendChild(col4);
-	
-	wrapper.appendChild(row);
-	
-	var andCircle = document.createElement("div");
-	andCircle.setAttribute("class", "andCircle shadow");
-	andCircle.innerHTML="+";
-	
-	wrapper.appendChild(andCircle);
-	
-	container.appendChild(wrapper);
-}
-function clearRecipes(){
-	for (var i=1; i< recipeCount;i++){
-		$('#recipe'+(i+1)).remove();
-	}
-	$('#recipe1').find('.andCircle').removeClass("disabled");
-	$('#recipe1').find('#vardrop span').text("Variables");
-	$('#recipe1').find('#alertdrop span').text("Alert Type")
-	$('#recipe1').find('.circle').css("background","#CDD5F6");
-	$('#recipe1').find('.circle').css("color","#071857");
-	$('#recipe1').find('.circle').removeClass("clicked");
-	$('#recipe1').find('.recipe_value').val('');
-	$('#recipe1').find('.recipe_range').val('');
-	recipeCount = 1;
-}
-function checkRecipes(){
-	var badRecipes = [];
-	for (var i=0; i< recipeCount;i++){
-		if ($('#recipe'+(i+1)).find('span').text()=="Variables" ||
-		!$('#recipe'+(i+1)).find('.circle').hasClass("clicked") ||
-		$('#recipe'+(i+1)).find('.recipe_value').val() == '' ||
-		$('#recipe'+(i+1)).find('.recipe_range').val() == '' ||
-		$('#recipe1').find('#alertdrop span').text()=="Alert Type"){
-			badRecipes.push((i+1));
-		}
-	}
-	return badRecipes;
-}
 function setUnits(text, label){
 	if (text=="Elevation"){
 		label.html("&nbsp;km");
@@ -289,7 +193,7 @@ function setUnits(text, label){
 	}
 }
 
-/*var variables = ["Elevation", "Temperature", "Wind Direction", "Wind Speed", "Humidity", "Rain", "Cloud Coverage", "Genotype"];
+var variables = ["Elevation", "Temperature", "Wind Direction", "Wind Speed", "Humidity", "Rain", "Cloud Coverage", "Genotype"];
 var logic = [">", "=", "<"]
 var digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 function addOptions(){
@@ -300,24 +204,62 @@ function addOptions(){
 		tile.innerHTML = "&nbsp;"+variables[i]+"&nbsp;";
 		box.appendChild(tile);
 	}
-	
 }
 
-function dragMoveListener (event) {
-    var target = event.target,
-        // keep the dragged position in the data-x/data-y attributes
-        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+function clicked(el, cl){
+	var elem = $(el).parent().find(cl).not($(el))
+	elem.css("background","#CDD5F6");
+	elem.css("color","#071857");
+	elem.removeClass("clicked");
+	$(el).css("background","#071857");
+	$(el).css("color","#CDD5F6");
+	$(el).addClass("clicked");
+}
 
-    // translate the element
-    target.style.webkitTransform =
-    target.style.transform =
-      'translate(' + x + 'px, ' + y + 'px)';
+function fillValues(id){
+	if (data[id].logic == ">"){
+		clicked("#greaterThan", ".circle");
+	}else if(data[id].logic == "="){
+		clicked("#equalTo", ".circle");
+	}else if(data[id].logic == "<"){
+		clicked("#lessThan", ".circle");
+	}else{
+	    $(".circle.clicked").css("background","#CDD5F6");
+		$(".circle.clicked").css("color","#071857");
+		$(".circle.clicked").removeClass("clicked");
+	}
+	$("#value-input").val(data[id].value);
+	$("#range-input").val(data[id].range);
+}
+function clearValues(){
+	$(".circle.clicked").css("background","#CDD5F6");
+	$(".circle.clicked").css("color","#071857");
+	$(".circle.clicked").removeClass("clicked");
+	$('#value-input').val("");
+	$('#range-input').val("");
+}
 
-    // update the posiion attributes
-    target.setAttribute('data-x', x);
-    target.setAttribute('data-y', y);
-}*/
+function checkRecipe(){
+	var badRecipe = false;
+	var text = "Cannot add recipe:";
+	if($(".circle.clicked").length<1){
+		text+="\nNo logical operator selected"
+		badRecipe=true;
+	}
+	if($('#value-input').val()=="" || $('#value-input').val()<0){
+		text+="\nA positive integer is required for the Value input"
+		badRecipe=true;
+	}
+	if($('#value-input').val()=="" || $('#value-input').val()<0){
+		text+="\nA positive integer is required for the Range input"
+		badRecipe=true;
+	}
+	if (!badRecipe){
+		text ="";
+	}
+	return text;
+			
+}
 
 
 

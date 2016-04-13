@@ -3,6 +3,38 @@ body, html{
 	width:100%;
 	height:100%;
 }
+#recipe-container{
+	width:80%;
+	margin:0 auto;
+	height:250px;
+	display:table;
+	border: 1px solid white;
+}
+#variable-box{
+	margin: 0px 20px 20px 20px;
+	padding:10px;
+	background:white;
+	display:table-cell;
+	width:164px;
+	color:gray;
+}
+#drop-box{
+	margin: 0px 20px 20px 20px;
+	padding:10px;
+	background:gray;
+	display:table-cell;
+	width:164px;
+	color:white;
+}
+#value-box{
+	margin: 0px 20px 20px 20px;
+	padding:10px;
+	background:white;
+	display:table-cell;
+	width:164px;
+	position:relative;
+	color:gray;
+}
 .tile{
 	background:gray;
 	padding:3px;
@@ -12,62 +44,74 @@ body, html{
     outline: none;
     font-weight: bold;
     color: #071857;
-	margin:2px;
+	margin-top:2px;
+	margin-bottom:2px;
+	margin-left: auto;
+	margin-right: auto;
 	width:140px;
+	z-index:100000;
 }
-#variable-box{
-	margin:20px;
+#delButton{
+	text-align:center;
+    width:45%;
+	float:right;
 	padding:10px;
-	background:white;
-	display:inline-block;
+    background: #CDD5F6;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    font-weight: bold;
+    color: #071857;
+	margin:0 auto;
+	margin-top:30px;
 }
-#drop-box{
-	width:200px;
-	height:200px;
-	background:white;
-	top:0;
-	left:400px;
-}
-.recipeCircle {
-	position: relative;
-	border-radius: 50%;
-	width:9%;
-	height: auto;
-	padding-top: 9%;
-	background: blue;
+#addButton{
+	text-align:center;
+    width:45%;
 	float:left;
-	margin:20px;
+	padding:10px;
+    background: #CDD5F6;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    font-weight: bold;
+    color: #071857;
+	margin:0 auto;
+	margin-top:30px;
 }
-.scoutSquare{
-	height:50%;
-	width:10%;
-	right:0;
-	top:0;
-	position:absolute;
-	background:black;
-	border:3px solid gray;
+input[type="number"] {
+	width:140px;
+	text-align:center;
+	padding:10px;
+	padding-right:0px !important;
+    background: #CDD5F6;
+    border-radius: 5px;
+    outline: none;
+    font-weight: bold;
+	border:none;
+    color: #071857;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:5px;
+	margin-bottom:5px;
 }
-.spraySquare{
-	height:50%;
-	width:10%;
-	right:0;
-	bottom:0;
-	position:absolute;
-	background:black;
-	border:3px solid gray;
-}
-.varSquare{
-	height:12.5%;
-	width:150px;
-	background:black;
-	border:3px solid gray;
+.circle {
+	width: 25px;
+	height:25px;
+    border-radius: 50%;
+    overflow:hidden;
+	margin:3px;
+    background: #CDD5F6;
+    outline: none;
+    font-weight: bold;
+	border:none;
+    color: #071857;	
+	margin-bottom:10px;
+	line-height:25px;
+	cursor:pointer;
 	float:left;
 }
 
-.value_label, .range_label{
-	color: lightgray;
-    font-weight: bold;
-}
 ::-webkit-input-placeholder {
     color:    #7D92DD;
 }
@@ -177,69 +221,7 @@ td.null {
 .disabled{
 	cursor: default;
 }
-.exit{
-	font-weight:bold;
-	position:absolute;
-	top:-5px;
-	right:-5px;
-	font-size:20px;
-	color:#CDD5F6;
-	cursor: pointer;
-}
-.recipe-wrapper{
-	width:80%;
-	margin:0 auto;
-}
-.andCircle{
-	position:relative;
-	width:40px;
-	height:40px;
-	background:#CDD5F6;
-    border-radius: 25px;
-    cursor: pointer;
-    outline: none;
-    font-weight: bold;
-    color: #071857;
-	line-height:40px;
-	text-align:center;
-	font-size:30px;
-	font-weight:bold;
-	margin-left:-50px;
-	margin-bottom:-10px;
-	z-index:1000;
-	
-}
-input[type="number"] {
-	min-width:130px;
-	text-align:center;
-    position: relative;
-    width: 80%;
-    margin: 0 auto;
-	padding:10px;
-	padding-right:0px !important;
-    background: #CDD5F6;
-    border-radius: 5px;
-    outline: none;
-    font-weight: bold;
-	border:none;
-    color: #071857;
-}
-.circle {
-	width: 25px;
-	height:25px;
-    border-radius: 50%;
-    overflow:hidden;
-    position: relative;
-    margin: 0 auto;
-    background: #CDD5F6;
-    outline: none;
-    font-weight: bold;
-	border:none;
-    color: #071857;	
-	margin-bottom:10px;
-	line-height:25px;
-	cursor:pointer;
-}
+
 
 .custom-dropdown {
 	min-width:130px;
@@ -303,26 +285,6 @@ input[type="number"] {
     opacity: 1;
 	display:block;
 }
-
-.recipeDisplay{
-    display: inline;
-    position: relative;
-}
-
-.recipeDisplay:hover:after{
-    background: #333;
-    background: rgba(0,0,0,.8);
-    border-radius: 5px;
-    color: #fff;
-    content: attr(tool);
-	top:0px;
-    left: 20%;
-    padding: 5px 15px;
-    position: absolute;
-    z-index: 98;
-	width:200px;
-}
-
 .shadow {
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12), 0 3px 5px -1px rgba(0, 0, 0, .2)
 }

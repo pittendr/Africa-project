@@ -7,66 +7,39 @@
 
   	<link rel="stylesheet" href="/static/notifications/css/bootstrap.css">
   	<link rel="stylesheet" href="/static/notifications/css/index.css">
-  	<link rel="stylesheet" href="/static/notifications/css/animate.css">
+  	<link rel="stylesheet" href="/static/notifications/css/dragula.css">
   	<link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
   	
   	<title>Recipe Generator</title>
 
-  	<script src="/static/notifications/js/jquery.min.js"></script>
-  	<script src="/static/notifications/js/bootstrap.min.js"></script>
-  	<script src="/static/notifications/js/interact.min.js"></script>
 </head>
 
 <body>
 
 	
-	<div id="recipe-container" class="container">
-		<div id ="recipe1" class = "recipe-wrapper">
-			<div class="row" >
-				<div class="col-sm-3 col-xs-5 text-center " style="margin-top:35px;">
-					<div id="vardrop" class="custom-dropdown shadow">
-						<span>Variables</span>
-						<ul class="custom-drop">	
-							<li><a>Elevation</a></li>
-							<li><a>Wind Speed</a></li>
-							<li><a>Wind Direction</a></li>
-							<li><a>Temperature</a></li>
-							<li><a>Humidity</a></li>
-							<li><a>Rain</a></li>
-							<li><a>Cloud Coverage</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-sm-1 col-xs-2 text-center" style="margin-top:10px;">
-						<div class="circle shadow"><p>></p></div>
-						<div class="circle shadow"><p>=</p></div>
-						<div class="circle shadow"><p><</p></div>
-				</div>
-				<div class="col-sm-3 col-xs-5 text-center" style="margin-top:35px;">
-					<input type="number" placeholder="Value" class="recipe_value shadow"><label class="value_label"></label>
-				</div>
-				<div class="col-sm-3 col-xs-6 text-center" style="margin-top:35px;">
-					<input type="number" placeholder="Range" class="recipe_range shadow"><label class="range_label">&nbsp;km</label>
-				</div>
-				<div class="col-sm-2 col-xs-6 text-center" style="margin-top:35px;">
-					<div id="alertdrop" class="custom-dropdown shadow">
-						<span>Alert Type</span>
-						<ul class="custom-drop">	
-							<li><a>Scout</a></li>
-							<li><a>Spray</a></li>
-						</ul>
-					</div>
-				</div>
+	<div id="recipe-container">
+		<div class="text-center" id="variable-box">
+			<p style="font-size:20px;">Variables</p>
+		</div>
+		<div class="text-center" id="drop-box">
+			<p style="font-size:20px;">Recipe</p>
+		</div>
+		<div class="text-center" id="value-box">
+			<p style="font-size:20px;">Values</p>
+		
+			<div style="margin:5px auto 50px auto; width:93px;">
+				<div id="greaterThan" class="circle shadow text-center"><p>></p></div>
+				<div id="equalTo" class="circle shadow text-center"><p>=</p></div>
+				<div id="lessThan"class="circle shadow text-center"><p><</p></div>
 			</div>
-			
-			<div class="andCircle shadow">+</div>
+			<input id = "value-input" type="number" placeholder="Value" class="shadow">
+			<input id = "range-input" type="number" placeholder="Range (km)" class="shadow">
+			<div style="margin:0 auto; width:160px;">
+				<button class="btn shadow" id="addButton">Add</button>
+				<button class="btn shadow" id="delButton">Delete</button>
+			</div>
 		</div>
 	</div>
-	<!--<div id="variable-box" class="text-center">
-	</div>
-	
-	<div id="drop-box" class="dropzone">
-	</div>-->
 	
 	<div id="saveButton" class=" shadow">Save</div>
 	
@@ -92,6 +65,9 @@
 		</div>
 			
 	</div>
+  	<script src="/static/notifications/js/jquery.min.js"></script>
+  	<script src="/static/notifications/js/bootstrap.min.js"></script>
+  	<script src="/static/notifications/js/dragula.min.js"></script>
 	<script src="/static/notifications/js/index.js"  type="text/javascript"></script>
 	{% include "notifications/latest.html" %}
 </body>
