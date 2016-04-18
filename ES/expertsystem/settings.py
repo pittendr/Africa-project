@@ -29,11 +29,26 @@ ALLOWED_HOSTS = []
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 28800
-# Application definition
 
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"
+
+#Used to send password reset e-mails.
+EMAIL_USE_TLS = True
+
+#Using google for now. Set up own smtp?
+EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_HOST_USER = '@gmail.com'
+
+EMAIL_HOST_PASSWORD = ''
+
+EMAIL_PORT = 587
+
+# Application definition
 INSTALLED_APPS = [
     'rest_framework',
-    'login.apps.LoginConfig',
+    'registration.apps.RegistrationConfig',
     'admin.apps.AdminConfig',
     'api.apps.ApiConfig',
     'notifications.apps.NotificationsConfig',

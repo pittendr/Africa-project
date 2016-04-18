@@ -16,14 +16,22 @@
 </head>
 
 <body>
-
-	<div class="text-center"><h3> Admin Page </h3></div>
-	<div id="recipe-container" class="container">
+	
+	
+	<div id="navigation-box">
+		<a href="/" style="font-size:14px;float:left;color:gray;">&nbsp;Recipe Creation Page&nbsp;</a>
+		<p style="font-size:14px;float:left;color:gray;">&nbsp;|&nbsp;</p>
+		<a href="/logout" style="font-size:14px;float:left;color:gray;">&nbsp;Logout&nbsp;</a>
+	</div>
+	
+	{%if perms.is_admin %}
+	<div class="text-center" style="margin-top:50px;"><h3> Admin Page </h3></div>
+	<div class="container">
 		<div class="panel-group">
 		    <div class="panel panel-default">
 			  <div class="panel-body" id="panelhead">Edit/Delete Recipes</div>
 			  <div class="panel-footer" id="panelfoot" style="display:none">
-				<ul id="recipe-list">
+				<ul class="list">
 					{% include "admin/recipes.html" %}
 				</ul>
 			  </div>
@@ -31,13 +39,19 @@
 		    <div class="panel panel-default">
 			  <div class="panel-body" id="panelhead">Edit/Delete Users</div>
 			  <div class="panel-footer" id="panelfoot" style="display:none">
-				<ul>
+				<ul class="list">
 					{% include "admin/users.html" %}
 				</ul>
 			  </div>
 			</div>
 		</div>
 	</div>
+	{% else %}
+	
+	<p class="text-center"style="font-size:20px;black:white;margin-top:50px;">You currently do not have permission to access the admin page</p>
+	
+	{% endif %}
+	
 	
 	<script src="/static/admin/js/index.js"  type="text/javascript"></script>
 </body>

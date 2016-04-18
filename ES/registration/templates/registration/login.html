@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<meta name="author" content="Galenic">
+
+  	<link rel="stylesheet" href="/static/registration/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="/static/registration/css/index.css">
+  	<link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+  	
+  	<title>Login Page</title>
+
+  	<script src="/static/registration/js/jquery.min.js"></script>
+  	<script src="/static/registration/js/bootstrap.min.js"></script>
+</head>
+
+  <body>
+
+    <div class="container">
+		<div style="width:40%; min-width:300px;margin:0 auto;" class="text-center">
+			{% block content %}
+
+			{% if form.errors %}
+			<p>Your username and password didn't match. Please try again.</p>
+			{% endif %}
+
+			{% if next %}
+				{% if user.is_authenticated %}
+				<p>Your account doesn't have access to this page. To proceed,
+				please login with an account that has access.</p>
+				{% else %}
+				<p>Please login to see this page.</p>
+				{% endif %}
+			{% endif %}
+
+			
+			<form method="post" class="form-signin" action="/login/">
+				<h2 class="form-signin-heading">Please sign in</h2>
+				{% csrf_token %}
+				<table>
+				<tr>
+					<label for="inputUsername" class="sr-only">Username</label>
+					<input type="text" name="username" value="{{ username }}" class="form-control" placeholder="Username" required autofocus>
+					
+				</tr>
+				<tr>
+					<label for="inputPassword" class="sr-only">Password</label>
+					<input type="password" name="password" value="" class="form-control" placeholder="Password" required>
+				</tr>
+				</table>
+				<input class="btn btn-lg btn-default btn-block" type="submit" value="Login" />
+				<input type="hidden" name="next" value="{{ next }}" />
+			</form>
+		
+		
+			<div id="navigation-box">
+				<p style="font-size:14px; display:inline-block; color:black;"><a href='/signup/'>&nbsp;Sign Up&nbsp;</a></p>
+				<p style="font-size:14px;display:inline-block;color:black;">&nbsp;|&nbsp;</p>
+				<p style="font-size:14px; display:inline-block; color:black;"><a href='/reset-password/'>&nbsp;Forgot your password?&nbsp;</a></p>
+				<br class="clear" />
+			</div>
+			
+			{% endblock %}
+		</div>
+	</div>
+  </body>
+</html>

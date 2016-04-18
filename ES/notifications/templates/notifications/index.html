@@ -14,15 +14,33 @@
 
 </head>
 
+
+{% if perms.is_admin %}
+<body onload="addOptions()">
+{% else %}
 <body>
+{% endif %}
 
 	
-	<div id="recipe-container">
+	<div id="navigation-box">
+		{% if perms.is_admin %}
+		<a href="/admin" style="font-size:14px; float:left; color:white;">&nbsp;Admin Page&nbsp;</a>
+		<p style="font-size:14px;float:left;color:white;">&nbsp;|&nbsp;</p>
+		{% endif %}
+		<a href="/logout" style="font-size:14px;float:left;color:white;">&nbsp;Logout&nbsp;</a>
+	</div>
+	
+	{% if perms.is_admin %}
+	<div id="recipe-container" class="shadow">
 		<div class="text-center" id="variable-box">
 			<p style="font-size:20px;">Variables</p>
 		</div>
 		<div class="text-center" id="drop-box">
 			<p style="font-size:20px;">Recipe</p>
+			<div id="drop-zone">
+			</div>
+			<div id="alert-style">
+			</div>
 		</div>
 		<div class="text-center" id="value-box">
 			<p style="font-size:20px;">Values</p>
@@ -35,15 +53,20 @@
 			<input id = "value-input" type="number" placeholder="Value" class="shadow">
 			<input id = "range-input" type="number" placeholder="Range (km)" class="shadow">
 			<div style="margin:0 auto; width:160px;">
-				<button class="btn shadow" id="addButton">Add</button>
-				<button class="btn shadow" id="delButton">Delete</button>
+				<button class="btn shadow leftButton" id="addButton">Add</button>
+				<button class="btn shadow rightButton" id="delButton">Delete</button>
 			</div>
 		</div>
 	</div>
 	
 	<div id="saveButton" class=" shadow">Save</div>
 	
-	<div id="recipe-list" class ="container">
+	{% else %}
+	
+	<p class="text-center"style="font-size:20px;color:white;margin-top:50px;">You currently do not have permission to create recipes</p>
+	
+	{% endif %}
+	<div id="recipe-list">
 		<div id="headcont">
 			<table id = "tableheader">
 				<tr>

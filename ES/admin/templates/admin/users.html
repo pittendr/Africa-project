@@ -1,0 +1,18 @@
+{% if users %}
+	{% for user in users %}
+		<li><a class="user">{{user}}</a>
+			<div class="block" style="display:none; margin-top:10px;">
+				{% if 'auth.is_admin' in user.get_all_permissions%}
+				    {%if not user.is_superuser%}
+						<label class="checkbox-inline"><input class= "admincheck" type="checkbox" value="" checked>Admin</label><br>
+					{%endif%}
+				{% else %}
+				<label class="checkbox-inline"><input class= "admincheck" type="checkbox" value="">Admin</label><br>
+				{% endif %}
+				{%if not user.is_superuser%}
+					<button class="deleteUser" style="margin-top:10px;margin-bottom:10px;">Delete User</button>
+				{%endif%}
+			</div>	
+		</li>
+	{% endfor %}
+{% endif %}

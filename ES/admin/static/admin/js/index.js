@@ -1,21 +1,26 @@
 var csrftoken = getCookie('csrftoken');
 
 $(document).ready(function(){
-	$('#recipe-list').on('click', 'li a', function(){
+	$('.list').on('click', 'li a', function(){
+		var elem = $(this).parent().find(".block")
 		if($(this).hasClass('clicked')){
-			$(this).parent().find(".recipe-block").css("display", "none");
+			elem.css("display", "none");
 		}else{
-			$(this).parent().find(".recipe-block").css("display", "block");
+			elem.css("display", "block");
 		}
 		$(this).toggleClass("clicked");
 	});
 	$(document).on('click', '#panelhead', function(){
+		var elem = $(this).parent().find("#panelfoot")
 		if($(this).hasClass('clicked')){
-			$(this).parent().find("#panelfoot").css("display", "none");
+			elem.css("display", "none");
 		}else{
-			$(this).parent().find("#panelfoot").css("display", "block");
+			elem.css("display", "block");
 		}
 		$(this).toggleClass("clicked");
+	});
+	$('.block').on('change', '.admincheck', function(){
+		
 	});
 	$("li").on("click", ".custom-dropdown", function(){
 		$(this).toggleClass('active');
@@ -135,4 +140,25 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+function changeAdmin(user){
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	});
+	$.ajax({
+		method: 'POST',
+		url: '/change-admin',
+		data: {'user':user},
+		success: function () {
+			alert(user + "'s admin status has changed")
+		},
+		error: function () {
+			alert("Unable to change "+user+"'s admin status")
+		}
+	});
 }

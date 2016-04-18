@@ -2,7 +2,7 @@
 	{% for recipe in recipes %}
 		{% if recipe.multiple == "start" %}		
 			<li><a>{{recipe.recipe_name}}</a>
-				<div class="recipe-block" style="display:none;">
+				<div class="block" style="display:none;">
 					<div id ="{{recipe.id}}" class="row" style="margin:20px; display:inline-block">
 						<div id="vardrop" class="custom-dropdown shadow" style="float:left; margin:5px;">
 							<span>{{recipe.recipe_variable}}</span>
@@ -14,6 +14,7 @@
 								<li><a>Humidity</a></li>
 								<li><a>Rain</a></li>
 								<li><a>Cloud Coverage</a></li>
+								<li><a>Genotype</a></li>
 							</ul>
 						</div>
 						<div id="logicdrop" class="custom-dropdown shadow"style="float:left; margin:5px;">
@@ -90,7 +91,7 @@
 			</li>
 		{% elif recipe.multiple == "null" %}
 			<li><a>{{recipe.recipe_name}}</a>
-				<div class="recipe-block" style="display:none;">
+				<div class="block" style="display:none;">
 					<div id ="{{recipe.id}}" class="row" style="margin:20px; display:inline-block">
 						<div id="vardrop" class="custom-dropdown shadow" style="float:left; margin:5px;">
 							<span>{{recipe.recipe_variable}}</span>

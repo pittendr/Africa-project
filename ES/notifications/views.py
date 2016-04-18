@@ -3,18 +3,14 @@ from django.http import HttpResponse
 import simplejson as json
 from notifications.models import Recipe
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import Http404
 
 @ensure_csrf_cookie
 def index(request):
     if not request.user.is_authenticated():
-        return redirect('%s?next=%s' % ('../login', request.path))
+        return redirect('/login')
     recipes = Recipe.objects.all()
-    last = Recipe.objects.last();
-    if last != None:
-        last = last.id
-    else:
-        last = 0;
-    context = {'recipes': recipes , 'latest' : last}
+    context = {'recipes': recipes }
 	
     return render(request, 'notifications/index.html', context)
 	
@@ -35,5 +31,18 @@ def data(request):
         context = {'recipes': recipes}		
         return render(request, 'notifications/table.html', context)
     else:
-        return HttpResponse("Failed")
+        raise Http404("Page not found")
+
+def latest(request):
+    if request.method == 'GET' and request.is_ajax():
+        last = Recipe.objects.last();
+        if last != None:
+            last = last.id
+        else:
+            last = 0;
+        context = {'latest':last}
+        return render(request, 'notifications/latest.html', context)
+    else:
+        raise Http404("Page not found")
+
 		

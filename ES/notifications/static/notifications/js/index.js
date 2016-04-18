@@ -1,13 +1,11 @@
-var recipeCount = 1;
+
 var csrftoken = getCookie('csrftoken');
-var recipe={};
 var data=[];
-recipeCount=0;
+var recipeCount=0;
 $(document).ready(function(){
-	addOptions();
+	getLatest();
 	
-	
-	var drag = dragula([document.querySelector('#variable-box'), document.querySelector('#drop-box')], {
+	var drag = dragula([document.querySelector('#variable-box'), document.querySelector('#drop-zone')], {
 		accepts: function (el, target, source, sibling) {
 			if(target == document.querySelector('#variable-box')){
 				return false;
@@ -18,53 +16,86 @@ $(document).ready(function(){
 		copySortSource: false,
 		removeOnSpill:true,
 	});
-	var dropbox = $("#drop-box");
 	
 	drag.on('drop', function(el, target, source, sibling){
 		$(el).attr('id', recipeCount);
+		$(el).css('margin-bottom','10px');
+		var span = document.createElement('span');
+		span.setAttribute("class","text-center");
+		span.innerHTML="+";
+		elDropped = $("#drop-zone").find(el);
+		if(elDropped.next('span').length <=0){
+			if(!elDropped.is(':last-child')){
+				elDropped.after(span);
+			}
+		}
+		if(elDropped.prev('span').length <=0){
+			if(!elDropped.is(':first-child')){
+				elDropped.before(span);
+			}
+			
+		}
 		recipeCount++;
 		clicked(el, '.tile');
 		clearValues();
 		data[$(".tile.clicked").attr("id")]=
 				{
+					"variable":$(".tile.clicked").text(),
 					"logic":"",
 					"value":"",
 					"range":"",
+					"check": false,
 				};
-		console.log(data[$(".tile.clicked").attr("id")])
 	});
 	
 	
-	$("#drop-box").on('click', '.tile', function(){
+	$("#drop-zone").on('click', '.tile', function(){
 		clicked(this, ".tile");
 		fillValues($(this).attr('id'));
-		
 	});
 	
 	
 	
 	$("#value-box").on('click', "#delButton", function(){
-		delete data[$(".tile.clicked").attr("id")];
+		deleteData($(".tile.clicked").attr('id'));
+		if($(".tile.clicked").next('span').length > 0 && $(".tile.clicked").prev('span').length>0){
+			$(".tile.clicked").next().remove();
+		}else if($(".tile.clicked").next('span').length > 0 && $(".tile.clicked").prev('span').length<=0){
+			$(".tile.clicked").next().remove();
+		}else if($(".tile.clicked").next('span').length <= 0 && $(".tile.clicked").prev('span').length>0){
+			$(".tile.clicked").prev().remove();
+		}
+		
 		$(".tile.clicked").remove();
 		clearValues();
+		
+		for(var i=0;i<data.length;i++){
+			console.log(data[i]);
+		}
+		
 	});
 	
 	$("#value-box").on('click', "#addButton", function(){
-		data[$(".tile.clicked").attr("id")]=
-				{
-					"logic":$(".circle.clicked").text(),
-					"value":$("#value-input").val(),
-					"range":$("#range-input").val(),
-				};
 		var text = checkRecipe();
 		if (text!=""){
 			alert(text);
 		}else{
-			for (var i=0;i<data.length;i++){
-				if(data[i]!=undefined){	
-					console.log(i+": "+data[i]);
-				}
-			}
+			data[$(".tile.clicked").attr("id")]=
+				{
+					"variable":$(".tile.clicked").text(),
+					"logic":$(".circle.clicked").text(),
+					"value":$("#value-input").val(),
+					"range":$("#range-input").val(),
+					"check": true,
+				};
+			$(".tile.clicked").css("background","#CDD5F6");
+			$(".tile.clicked").css("color","#071857");
+			$(".tile.clicked").addClass("tt");
+			$(".tile.clicked").attr("tool", $(".tile.clicked").text() + $(".circle.clicked").text() +" "+$("#value-input").val() + "\nRange: " + $("#range-input").val());
+			
+			$(".tile.clicked").removeClass("clicked");
+			
+			clearValues();
 			
 		}
 	});
@@ -75,99 +106,22 @@ $(document).ready(function(){
 	
 	
 
-	/*var tabledata=null;
+	var tabledata=null;
 	$(document).on("click", "#saveButton", function(){
-		var i=1;
-		var badRecipes = checkRecipes();
-		if(typeof badRecipes == 'undefined' || badRecipes.length ==0){
+		var i=1;	
+		if(!badRecipes()){
 			name = prompt("Please enter the name of your Recipe");
 			if(name=="null"){
 				name = "Recipe";
-			}
+			}			
 			ajaxCall(i);
 		}else{
-			if (badRecipes.length == 1){
-				alert("Recipe "+badRecipes+" is not valid.");
-			}else{
-				alert("Recipe(s) "+badRecipes+" are not valid.");
-			}
-			
+			alert("Could not save recipes. Please ensure that all recipes have the required information.")
 		}
-		function ajaxCall(i){
-			var multiple= null;
-			var id = null;
-			var alrt = $("#recipe1").find('#alertdrop span').text();
-			if(recipeCount==1){
-				multiple = "null";
-				id = "null"
-			}else{
-				id = latest;
-				if(i==1){
-					multiple = "start";
-				}else if(i==recipeCount){
-					multiple = "end";
-				}else{
-					multiple = "middle";
-				}
-			}
-			$.ajaxSetup({
-				beforeSend: function(xhr, settings) {
-					if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-						xhr.setRequestHeader("X-CSRFToken", csrftoken);
-					}
-				}
-			});
-			$.ajax({
-				method: 'POST',
-				url: '/data',
-				data: {
-					'variable' : $("#recipe"+(i)).find('#vardrop span').text(),
-					'operator' : $("#recipe"+(i)).find(".circle.clicked").text(),
-					'value' : $("#recipe"+(i)).find('.recipe_value').val(),
-					'range' : $("#recipe"+(i)).find('.recipe_range').val(),
-					'multiple' : multiple,
-					'id' : id,
-					'alert' : alrt,
-					'name' : name,
-				},
-				success: function (data) {
-					$('#tablebody').html(data);
-					if (i<recipeCount){
-						i++;
-						ajaxCall(i);
-					}else{
-						clearRecipes();
-						latest+=i;
-					}
-				},
-				error: function (data) {
-					 console.log("failure", data);
-				}
-			});
-		}
-	});*/
+	});
 	
 });
 
-function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
 
 function setUnits(text, label){
 	if (text=="Elevation"){
@@ -194,13 +148,11 @@ function setUnits(text, label){
 }
 
 var variables = ["Elevation", "Temperature", "Wind Direction", "Wind Speed", "Humidity", "Rain", "Cloud Coverage", "Genotype"];
-var logic = [">", "=", "<"]
-var digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 function addOptions(){
 	var box = document.getElementById("variable-box");
 	for (i=0; i<variables.length;i++){
 		var tile = document.createElement("div");
-		tile.setAttribute("class", "tile shadow draggable drag-drop");
+		tile.setAttribute("class", "tile shadow");
 		tile.innerHTML = "&nbsp;"+variables[i]+"&nbsp;";
 		box.appendChild(tile);
 	}
@@ -258,8 +210,130 @@ function checkRecipe(){
 		text ="";
 	}
 	return text;
-			
 }
+
+function badRecipes(){
+	for(var i=0;i<data.length; i++){
+		console.log(data[i]);
+		if (!data[i].check){
+			return true;
+		}
+	}
+	return false;
+}
+function clearRecipes(){
+	$("#drop-zone").empty();
+	deleteData("all");
+	recipeCount = 0;
+}
+
+function deleteData(id){
+	if(id=="all"){
+		data.splice(0,data.length)
+	}else{
+		delete data[id];
+		for(var i=0;i<data.length;i++){
+			if(data[i]==undefined){
+				data.splice(i,1)
+			}
+		}
+	}
+}
+
+function ajaxCall(i){
+	var multiple= "null";
+	var id = "null";
+	var alrt = "Spray"
+	if(data.length!=1){
+		id = latest;
+		if(i==1){
+			multiple = "start";
+		}else if(i==data.length){
+			multiple = "end";
+		}else{
+			multiple = "middle";
+		}
+	}
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	});
+	console.log(i);
+	$.ajax({
+		method: 'POST',
+		url: '/data',
+		data: {
+			'variable' : data[i-1].variable,
+			'operator' : data[i-1].logic,
+			'value' : data[i-1].value,
+			'range' : data[i-1].range,
+			'multiple' : multiple,
+			'id' : id,
+			'alert' : alrt,
+			'name' : name,
+		},
+		success: function (d) {
+			
+			console.log("success", i);
+			if (i==data.length){
+				latest+=i;
+				$('#tablebody').html(d);
+				clearValues();	
+				clearRecipes();
+			}else{
+				i++;
+				ajaxCall(i);
+			}
+		},
+		error: function (d) {
+			 console.log("failure", d);
+		}
+	});
+}
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function getLatest(){
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	});
+	$.ajax({
+		method: 'GET',
+		url: '/latest',
+		success: function (d) {
+			latest = d
+		},
+		error: function (d) {
+			 console.log("failure", d);
+		}
+	});
+}
+
 
 
 
