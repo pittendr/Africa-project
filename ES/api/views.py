@@ -2,13 +2,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework import generics
-from api.models import FIA
-from notifications.models import Recipe
-from api.serializers import FIASerializer, RecipeSerializer
+from api.models import FIA, Recipe
+from api.serializers import FIASerializer, RecipeSerializer, UserSerializer
 from django.http import Http404
 import simplejson as json
 import pyowm
 import urllib
+from django.contrib.auth.models import User
+from django.shortcuts import render
 		
 class FIAList(APIView):
     def get(self, request, format=None):
@@ -60,6 +61,17 @@ class FIADetail(generics.RetrieveAPIView):
 class RecipeList(generics.ListCreateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    def post(self, request, format=None):
+        serializer = RecipeSerializer(data=request.data)
+        if serializer.is_valid():
+            recipes = Recipe.objects.all()
+            context = {'recipes': recipes}
+            serializer.save()	
+            return render(request, 'notifications/table.html', context)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        		
+        
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -67,5 +79,14 @@ class RecipeList(generics.ListCreateAPIView):
 class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+	
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 		

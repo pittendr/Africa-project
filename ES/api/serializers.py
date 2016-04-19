@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from api.models import FIA  
-from notifications.models import Recipe 
+from api.models import FIA, Recipe 
+from django.contrib.auth.models import User
 
 class FIASerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,9 +29,10 @@ class FIASerializer(serializers.ModelSerializer):
         return instance
 		
 class RecipeSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Recipe
-        fields = ('id', 'recipe_variable', 'logic_operator', 'recipe_limit', 'recipe_range', 'recipe_alert')
+        fields = ('id', 'recipe_variable', 'logic_operator', 'recipe_limit', 'recipe_range', 'recipe_alert','multiple','recipe_match', 'recipe_name', 'owner')
 		
     def create(self, validated_data):
         return Recipe.objects.create(**validated_data)
@@ -42,5 +43,15 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.recipe_limit = validated_data.get('recipe_limit', instance.recipe_limit)
         instance.recipe_range = validated_data.get('recipe_range', instance.recipe_range)
         instance.recipe_alert = validated_data.get('recipe_alert', instance.recipe_alert)
+        instance.multiple = validated_data.get('multiple', instance.multiple)
+        instance.recipe_match = validated_data.get('recipe_match', instance.recipe_match)
+        instance.recipe_name = validated_data.get('recipe_name', instance.recipe_name)
         instance.save()
         return instance
+		
+class UserSerializer(serializers.ModelSerializer):
+    recipes = serializers.PrimaryKeyRelatedField(many=True, queryset=Recipe.objects.all())
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'recipes')

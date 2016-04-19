@@ -19,7 +19,15 @@ $(document).ready(function(){
 		}
 		$(this).toggleClass("clicked");
 	});
-	$('.block').on('change', '.admincheck', function(){
+	$('.list').on('change', '.admincheck', function(){
+		username = $(this).closest('li').find(">:first-child").text();
+		changeAdmin(username)
+	});
+	$('.list').on('click', '.deleteUser', function(){
+		username = $(this).closest('li').find(">:first-child").text();
+		if(confirm("Are you sure you want to delete "+username+"'s account? This cannot be reversed.")){
+			deleteUser(username);
+		}
 		
 	});
 	$("li").on("click", ".custom-dropdown", function(){
@@ -152,13 +160,34 @@ function changeAdmin(user){
 	});
 	$.ajax({
 		method: 'POST',
-		url: '/change-admin',
+		url: '/change-admin/',
 		data: {'user':user},
-		success: function () {
+		success: function (data) {
 			alert(user + "'s admin status has changed")
 		},
 		error: function () {
 			alert("Unable to change "+user+"'s admin status")
+		}
+	});
+}
+function deleteUser(user){
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	});
+	$.ajax({
+		method: 'POST',
+		url: '/delete-user/',
+		data: {'user':user},
+		success: function (data) {
+			alert(user + " has been deleted")
+			$("#user-list").html(data);
+		},
+		error: function () {
+			alert("Unable to delete "+user)
 		}
 	});
 }

@@ -264,16 +264,16 @@ function ajaxCall(i){
 	console.log(i);
 	$.ajax({
 		method: 'POST',
-		url: '/data',
+		url: '/recipe/',
 		data: {
-			'variable' : data[i-1].variable,
-			'operator' : data[i-1].logic,
-			'value' : data[i-1].value,
-			'range' : data[i-1].range,
+			'recipe_variable' : data[i-1].variable,
+			'logic_operator' : data[i-1].logic,
+			'recipe_limit' : data[i-1].value,
+			'recipe_range' : data[i-1].range,
 			'multiple' : multiple,
-			'id' : id,
-			'alert' : alrt,
-			'name' : name,
+			'recipe_match' : id,
+			'recipe_alert' : alrt,
+			'recipe_name' : name,
 		},
 		success: function (d) {
 			

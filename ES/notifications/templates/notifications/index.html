@@ -15,7 +15,7 @@
 </head>
 
 
-{% if perms.is_admin %}
+{% if perms.auth.is_admin %}
 <body onload="addOptions()">
 {% else %}
 <body>
@@ -23,14 +23,14 @@
 
 	
 	<div id="navigation-box">
-		{% if perms.is_admin %}
+		{% if perms.auth.is_admin %}
 		<a href="/admin" style="font-size:14px; float:left; color:white;">&nbsp;Admin Page&nbsp;</a>
 		<p style="font-size:14px;float:left;color:white;">&nbsp;|&nbsp;</p>
 		{% endif %}
 		<a href="/logout" style="font-size:14px;float:left;color:white;">&nbsp;Logout&nbsp;</a>
 	</div>
 	
-	{% if perms.is_admin %}
+	{% if perms.auth.is_admin %}
 	<div id="recipe-container" class="shadow">
 		<div class="text-center" id="variable-box">
 			<p style="font-size:20px;">Variables</p>

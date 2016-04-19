@@ -17,3 +17,14 @@ class FIA(models.Model):
     humidity = models.FloatField(blank=True)
     rain = models.FloatField(blank=True)
     clouds = models.FloatField(blank=True)
+
+class Recipe(models.Model):
+    owner = models.ForeignKey('auth.User', related_name='recipes', default='1')
+    recipe_variable = models.CharField(max_length=255)
+    logic_operator = models.CharField(max_length=255)
+    recipe_limit = models.PositiveIntegerField()
+    recipe_range = models.PositiveIntegerField()
+    multiple = models.CharField(max_length=255)
+    recipe_match = models.CharField(max_length=255)
+    recipe_alert = models.CharField(max_length=255)
+    recipe_name = models.CharField(max_length=255)
