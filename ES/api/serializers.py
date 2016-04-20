@@ -28,11 +28,19 @@ class FIASerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 		
+class UserSerializer(serializers.ModelSerializer):
+    recipes = serializers.PrimaryKeyRelatedField(many=True, queryset=Recipe.objects.all())
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'recipes')
+		
 class RecipeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Recipe
         fields = ('id', 'recipe_variable', 'logic_operator', 'recipe_limit', 'recipe_range', 'recipe_alert','multiple','recipe_match', 'recipe_name', 'owner')
+		
 		
     def create(self, validated_data):
         return Recipe.objects.create(**validated_data)
@@ -48,10 +56,3 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.recipe_name = validated_data.get('recipe_name', instance.recipe_name)
         instance.save()
         return instance
-		
-class UserSerializer(serializers.ModelSerializer):
-    recipes = serializers.PrimaryKeyRelatedField(many=True, queryset=Recipe.objects.all())
-
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'recipes')

@@ -18,14 +18,31 @@
 <body>
 	
 	
-	<div id="navigation-box">
-		<a href="/" style="font-size:14px;float:left;color:gray;">&nbsp;Recipe Creation Page&nbsp;</a>
-		<p style="font-size:14px;float:left;color:gray;">&nbsp;|&nbsp;</p>
-		<a href="/logout" style="font-size:14px;float:left;color:gray;">&nbsp;Logout&nbsp;</a>
-	</div>
+	<nav class="navbar navbar-inverse shadow" style="border:none;">
+	  <div class="container-fluid">
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a class="navbar-brand" href="#">Brand</a>
+		</div>
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		  <ul class="nav navbar-nav navbar-right">
+			<li class="dropdown">
+				<li><a href="/">&nbsp;Recipe Creation Page&nbsp;</a></li>
+				<li><a href="/logout">&nbsp;Logout&nbsp;</a></li>
+				<li role="separator" class="divider"></li>
+			</li>
+		  </ul>
+		</div>
+	  </div>
+	</nav>
 	
 	{%if perms.auth.is_admin %}
-	<div class="text-center" style="margin-top:50px;"><h3> Admin Page </h3></div>
+	<div class="text-center" style="margin:25px; color:white;"><h3> Admin Page </h3></div>
 	<div class="container">
 		<div class="panel-group">
 		    <div class="panel panel-default">
@@ -48,7 +65,7 @@
 	</div>
 	{% else %}
 	
-	<p class="text-center"style="font-size:20px;black:white;margin-top:50px;">You currently do not have permission to access the admin page</p>
+	<p class="text-center"style="font-size:20px;color:white;margin-top:50px;">You currently do not have permission to access the admin page</p>
 	
 	{% endif %}
 	

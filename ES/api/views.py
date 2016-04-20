@@ -66,15 +66,9 @@ class RecipeList(generics.ListCreateAPIView):
         if serializer.is_valid():
             recipes = Recipe.objects.all()
             context = {'recipes': recipes}
-            serializer.save()	
+            serializer.save(owner=self.request.user)	
             return render(request, 'notifications/table.html', context)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        		
-        
-    
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
 		
 class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Recipe.objects.all()
@@ -83,7 +77,6 @@ class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
 
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()

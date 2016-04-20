@@ -1,5 +1,5 @@
 body, html{
-	background: #CDD5F6;
+	background:#444343;
 	width:100%;
 	height:100%;
 }
@@ -10,6 +10,19 @@ body, html{
 	padding:10px;
 	margin:10px;
 }
+.panel{
+	border:none;
+}
+#panelhead{
+	background:#131313;
+	color:rgba(255,255,255,0.87);
+	border:none;
+}
+#panelfoot{
+	background:#303030;
+	color:rgba(255,255,255,0.87);
+	border:none;
+}
 
 input[type="number"] {
 	min-width:130px;
@@ -19,15 +32,42 @@ input[type="number"] {
     margin: 0 auto;
 	padding:10px;
 	padding-right:0px !important;
-    background: #CDD5F6;
+    background: rgba(255,255,255,0.87);
     border-radius: 5px;
     outline: none;
     font-weight: bold;
 	border:none;
-    color: #071857;
+    color: rgba(4,4,4,0.87)
 }
 #panelhead{
 	cursor:pointer;
+}
+button{
+	text-align:center;
+    width:100px;
+	padding:10px;
+    background: rgba(255,255,255,0.87);
+    color: rgba(4,4,4,0.87);
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    font-weight: bold;
+	margin:5px;
+}
+.deleteUser{
+	text-align:center;
+    width:120px;
+	padding:10px;
+    background: rgba(255,255,255,0.87);
+    color: rgba(4,4,4,0.87);
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    font-weight: bold;
+	margin:5px;
+}
+.list a{
+	color:rgba(255,255,255,0.87);
 }
 li{
 	cursor:pointer;
@@ -37,21 +77,19 @@ li{
     font-weight: bold;
 }
 ::-webkit-input-placeholder {
-    color:    #7D92DD;
+    color:    rgba(4,4,4,0.3);
 }
 :-moz-placeholder { 
-   color:    #7D92DD;
-   opacity:  1;
+   color: rgba(4,4,4,0.3);
 }
 ::-moz-placeholder { 
-   color:    #7D92DD;
-   opacity:  1;
+   color:rgba(4,4,4,0.3);
 }
 :-ms-input-placeholder { 
-   color:    #7D92DD;
+   color:  rgba(4,4,4,0.3);
 }
 :placeholder-shown {
-  color:    #7D92DD;
+  color: rgba(4,4,4,0.3);
 }
 
 .custom-dropdown {
@@ -60,12 +98,12 @@ li{
     width: 150px;
     margin: 0 auto;
 	padding:10px;
-    background: #CDD5F6;
+    background: rgba(255,255,255,0.87);
     border-radius: 5px;
     cursor: pointer;
     outline: none;
     font-weight: bold;
-    color: #071857;
+    color: rgba(4,4,4,0.87);
 }
 
 .custom-dropdown:after{
@@ -78,7 +116,7 @@ li{
     margin-top: -3px;
     border-width: 6px 6px 0 6px;
     border-style: solid;
-    border-color: #071857 transparent;
+    border-color: rgba(4,4,4,0.87) transparent;
 }
 
 .custom-dropdown .custom-drop {
@@ -87,7 +125,7 @@ li{
     top: 130%;
     left: 0px;
     right: 0;
-    background: #CDD5F6;
+    background: rgba(255,255,255,0.87);
     border-radius: 5px;
     list-style: none;
     opacity: 0;
@@ -100,8 +138,8 @@ li{
 	padding:10px;
 	margin-left:-30px;
 	margin-right:10px;
-    color: #071857;
-    border-bottom: 1px solid #7D92DD;
+    color: rgba(4,4,4,0.87);
+    border-bottom: 1px solid rgba(255,255,255,0.87)
 }
 
 .custom-dropdown .custom-drop li:first-of-type a {

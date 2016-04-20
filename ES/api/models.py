@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from django.contrib.auth.models import User
 
 from django.db import models
     
@@ -19,7 +20,7 @@ class FIA(models.Model):
     clouds = models.FloatField(blank=True)
 
 class Recipe(models.Model):
-    owner = models.ForeignKey('auth.User', related_name='recipes', default='1')
+    owner = models.ForeignKey(User, related_name='recipes')
     recipe_variable = models.CharField(max_length=255)
     logic_operator = models.CharField(max_length=255)
     recipe_limit = models.PositiveIntegerField()
@@ -28,3 +29,6 @@ class Recipe(models.Model):
     recipe_match = models.CharField(max_length=255)
     recipe_alert = models.CharField(max_length=255)
     recipe_name = models.CharField(max_length=255)
+	
+    def save(self, *args, **kwargs):
+        super(Recipe, self).save(*args, **kwargs)

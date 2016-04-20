@@ -1,13 +1,14 @@
 
 var csrftoken = getCookie('csrftoken');
-var data=[];
+var data={};
 var recipeCount=0;
 $(document).ready(function(){
 	getLatest();
+	clicked(document.getElementById("sprayButton"), '.alert');
 	
-	var drag = dragula([document.querySelector('#variable-box'), document.querySelector('#drop-zone')], {
+	var drag = dragula([document.querySelector('#variable-zone'), document.querySelector('#drop-zone')], {
 		accepts: function (el, target, source, sibling) {
-			if(target == document.querySelector('#variable-box')){
+			if(target == document.querySelector('#variable-zone')){
 				return false;
 			}
 			return true;
@@ -18,7 +19,7 @@ $(document).ready(function(){
 	});
 	
 	drag.on('drop', function(el, target, source, sibling){
-		$(el).attr('id', recipeCount);
+		$(el).attr('id', "recipe"+recipeCount);
 		$(el).css('margin-bottom','10px');
 		var span = document.createElement('span');
 		span.setAttribute("class","text-center");
@@ -46,6 +47,8 @@ $(document).ready(function(){
 					"range":"",
 					"check": false,
 				};
+		console.log($(".tile.clicked").attr("id"));
+		console.log(data);
 	});
 	
 	
@@ -54,23 +57,27 @@ $(document).ready(function(){
 		fillValues($(this).attr('id'));
 	});
 	
-	
+	$("#recipe-footer").on('click','#sprayButton',function(){
+		clicked(document.getElementById("sprayButton"),'.alert');
+	});
+	$("#recipe-footer").on('click','#scoutButton',function(){
+		clicked(document.getElementById("scoutButton"),'.alert');
+	});
 	
 	$("#value-box").on('click', "#delButton", function(){
-		deleteData($(".tile.clicked").attr('id'));
-		if($(".tile.clicked").next('span').length > 0 && $(".tile.clicked").prev('span').length>0){
-			$(".tile.clicked").next().remove();
-		}else if($(".tile.clicked").next('span').length > 0 && $(".tile.clicked").prev('span').length<=0){
-			$(".tile.clicked").next().remove();
-		}else if($(".tile.clicked").next('span').length <= 0 && $(".tile.clicked").prev('span').length>0){
-			$(".tile.clicked").prev().remove();
-		}
-		
-		$(".tile.clicked").remove();
-		clearValues();
-		
-		for(var i=0;i<data.length;i++){
-			console.log(data[i]);
+		if($(".tile.clicked").length){
+			console.log("deleting");
+			deleteData($(".tile.clicked").attr('id'));
+			if($(".tile.clicked").next('span').length > 0 && $(".tile.clicked").prev('span').length>0){
+				$(".tile.clicked").next().remove();
+			}else if($(".tile.clicked").next('span').length > 0 && $(".tile.clicked").prev('span').length<=0){
+				$(".tile.clicked").next().remove();
+			}else if($(".tile.clicked").next('span').length <= 0 && $(".tile.clicked").prev('span').length>0){
+				$(".tile.clicked").prev().remove();
+			}
+			
+			$(".tile.clicked").remove();
+			clearValues();
 		}
 		
 	});
@@ -88,11 +95,13 @@ $(document).ready(function(){
 					"range":$("#range-input").val(),
 					"check": true,
 				};
-			$(".tile.clicked").css("background","#CDD5F6");
-			$(".tile.clicked").css("color","#071857");
+			$(".tile.clicked").css("background","rgba(100,100,100,0.87)");
+			$(".tile.clicked").css("color","rgba(255,255,255,0.87)");
+			$(".tile.clicked").css("border-color","rgba(100,100,100,0.87)");
+			$(".tile.clicked").append("&#10004;");
 			$(".tile.clicked").addClass("tt");
-			$(".tile.clicked").attr("tool", $(".tile.clicked").text() + $(".circle.clicked").text() +" "+$("#value-input").val() + "\nRange: " + $("#range-input").val());
-			
+			$(".tile.clicked").attr("tool", $(".tile.clicked").text() + $(".circle.clicked").text() +" "+$("#value-input").val() + ", \nRange: " + $("#range-input").val());
+			$(".tile.clicked").addClass("added");
 			$(".tile.clicked").removeClass("clicked");
 			
 			clearValues();
@@ -108,13 +117,22 @@ $(document).ready(function(){
 
 	var tabledata=null;
 	$(document).on("click", "#saveButton", function(){
-		var i=1;	
-		if(!badRecipes()){
+		var i=1;
+		var sendData=[]
+		for (var key in data){
+			if (data.hasOwnProperty(key)){
+				console.log(data[key]);
+				if(data[key]!=undefined){
+					sendData.push(data[key]);
+				}
+			}
+		}
+		if(!badRecipes(sendData)){
 			name = prompt("Please enter the name of your Recipe");
 			if(name=="null"){
 				name = "Recipe";
 			}			
-			ajaxCall(i);
+			ajaxCall(i, sendData);
 		}else{
 			alert("Could not save recipes. Please ensure that all recipes have the required information.")
 		}
@@ -149,7 +167,7 @@ function setUnits(text, label){
 
 var variables = ["Elevation", "Temperature", "Wind Direction", "Wind Speed", "Humidity", "Rain", "Cloud Coverage", "Genotype"];
 function addOptions(){
-	var box = document.getElementById("variable-box");
+	var box = document.getElementById("variable-zone");
 	for (i=0; i<variables.length;i++){
 		var tile = document.createElement("div");
 		tile.setAttribute("class", "tile shadow");
@@ -160,11 +178,23 @@ function addOptions(){
 
 function clicked(el, cl){
 	var elem = $(el).parent().find(cl).not($(el))
-	elem.css("background","#CDD5F6");
-	elem.css("color","#071857");
-	elem.removeClass("clicked");
-	$(el).css("background","#071857");
-	$(el).css("color","#CDD5F6");
+	elem.each(function(){
+		if($(this).hasClass("added")){
+			$(this).css("background","rgba(100,100,100,0.87)");
+			$(this).css("color","rgba(255,255,255,0.87)");
+			$(this).css("border-color","rgba(100,100,100,0.87)");
+			$(this).removeClass("clicked");
+		}else{
+			$(this).css("background","rgba(255,255,255,0.87)");
+			$(this).css("color","rgba(4,4,4,0.87)");
+			$(this).css("border-color","rgba(255,255,255,0.87)");
+			$(this).removeClass("clicked");
+			
+		}
+	});
+	$(el).css("background","rgba(4,4,4,0.87)");
+	$(el).css("color","rgba(255,255,255,0.87)");
+    $(el).css("border-color","rgba(255,255,255,0.87)");
 	$(el).addClass("clicked");
 }
 
@@ -176,16 +206,16 @@ function fillValues(id){
 	}else if(data[id].logic == "<"){
 		clicked("#lessThan", ".circle");
 	}else{
-	    $(".circle.clicked").css("background","#CDD5F6");
-		$(".circle.clicked").css("color","#071857");
+	    $(".circle.clicked").css("background","rgba(255,255,255,0.87)");
+		$(".circle.clicked").css("color","rgba(4,4,4,0.87)");
 		$(".circle.clicked").removeClass("clicked");
 	}
 	$("#value-input").val(data[id].value);
 	$("#range-input").val(data[id].range);
 }
 function clearValues(){
-	$(".circle.clicked").css("background","#CDD5F6");
-	$(".circle.clicked").css("color","#071857");
+	$(".circle.clicked").css("background","rgba(255,255,255,0.87)");
+	$(".circle.clicked").css("color","rgba(4,4,4,0.87)");
 	$(".circle.clicked").removeClass("clicked");
 	$('#value-input').val("");
 	$('#range-input').val("");
@@ -202,7 +232,7 @@ function checkRecipe(){
 		text+="\nA positive integer is required for the Value input"
 		badRecipe=true;
 	}
-	if($('#value-input').val()=="" || $('#value-input').val()<0){
+	if($('#range-input').val()=="" || $('#range-input').val()<0){
 		text+="\nA positive integer is required for the Range input"
 		badRecipe=true;
 	}
@@ -212,10 +242,10 @@ function checkRecipe(){
 	return text;
 }
 
-function badRecipes(){
-	for(var i=0;i<data.length; i++){
-		console.log(data[i]);
-		if (!data[i].check){
+function badRecipes(recipeData){
+	for(var i=0;i<recipeData.length; i++){
+		console.log(recipeData[i]);
+		if (!recipeData[i].check){
 			return true;
 		}
 	}
@@ -227,28 +257,26 @@ function clearRecipes(){
 	recipeCount = 0;
 }
 
-function deleteData(id){
+function deleteData(id){	
 	if(id=="all"){
-		data.splice(0,data.length)
-	}else{
-		delete data[id];
-		for(var i=0;i<data.length;i++){
-			if(data[i]==undefined){
-				data.splice(i,1)
+		for (var key in data){
+			if (data.hasOwnProperty(key)){
+				delete data[key];
 			}
 		}
+	}else{
+		delete data[id];
 	}
 }
 
-function ajaxCall(i){
+function ajaxCall(i, recipeData){
 	var multiple= "null";
 	var id = "null";
-	var alrt = "Spray"
-	if(data.length!=1){
+	if(recipeData.length!=1){
 		id = latest;
 		if(i==1){
 			multiple = "start";
-		}else if(i==data.length){
+		}else if(i==recipeData.length){
 			multiple = "end";
 		}else{
 			multiple = "middle";
@@ -266,26 +294,27 @@ function ajaxCall(i){
 		method: 'POST',
 		url: '/recipe/',
 		data: {
-			'recipe_variable' : data[i-1].variable,
-			'logic_operator' : data[i-1].logic,
-			'recipe_limit' : data[i-1].value,
-			'recipe_range' : data[i-1].range,
+			'recipe_variable' : recipeData[i-1].variable,
+			'logic_operator' : recipeData[i-1].logic,
+			'recipe_limit' : recipeData[i-1].value,
+			'recipe_range' : recipeData[i-1].range,
 			'multiple' : multiple,
 			'recipe_match' : id,
-			'recipe_alert' : alrt,
+			'recipe_alert' : $(".alert.clicked").text(),
 			'recipe_name' : name,
+			'owner' : user,
 		},
 		success: function (d) {
 			
 			console.log("success", i);
-			if (i==data.length){
+			if (i==recipeData.length){
 				latest+=i;
 				$('#tablebody').html(d);
 				clearValues();	
 				clearRecipes();
 			}else{
 				i++;
-				ajaxCall(i);
+				ajaxCall(i, recipeData);
 			}
 		},
 		error: function (d) {
