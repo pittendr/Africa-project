@@ -63,7 +63,7 @@ $(document).ready(function(){
 				}
 			});
 			$.ajax({
-				method: 'PUT',
+				method: 'PATCH',
 				url: '/recipe/'+id+'/',
 				data: {
 					"recipe_variable" : $('#'+id).find('#vardrop span').text(),
@@ -163,10 +163,10 @@ function changeAdmin(user){
 		url: '/change-admin/',
 		data: {'user':user},
 		success: function (data) {
-			alert(user + "'s admin status has changed")
+			alert(user + "'s creator status has changed")
 		},
 		error: function () {
-			alert("Unable to change "+user+"'s admin status")
+			alert("Unable to change "+user+"'s creator status")
 		}
 	});
 }

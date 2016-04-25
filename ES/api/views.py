@@ -59,16 +59,16 @@ class FIADetail(generics.RetrieveAPIView):
     serializer_class = FIASerializer
 	
 class RecipeList(generics.ListCreateAPIView):
-    queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
-    def post(self, request, format=None):
-        serializer = RecipeSerializer(data=request.data)
-        if serializer.is_valid():
-            recipes = Recipe.objects.all()
-            context = {'recipes': recipes}
-            serializer.save(owner=self.request.user)	
-            return render(request, 'notifications/table.html', context)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        queryset = Recipe.objects.all()
+        serializer_class = RecipeSerializer
+        def post(self, request, format=None):
+            serializer = RecipeSerializer(data=request.data)
+            if serializer.is_valid():
+                recipes = Recipe.objects.all()
+                context = {'recipes': recipes}
+                serializer.save(owner=self.request.user)	
+                return render(request, 'notifications/table.html', context)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 		
 class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Recipe.objects.all()

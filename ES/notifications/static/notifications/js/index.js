@@ -2,6 +2,7 @@
 var csrftoken = getCookie('csrftoken');
 var data={};
 var recipeCount=0;
+var latest = null;
 $(document).ready(function(){
 	getLatest();
 	clicked(document.getElementById("sprayButton"), '.alert');
@@ -47,14 +48,15 @@ $(document).ready(function(){
 					"range":"",
 					"check": false,
 				};
-		console.log($(".tile.clicked").attr("id"));
-		console.log(data);
+				
+		setUnits($(".tile.clicked").text(), document.getElementById("value-input"));
 	});
 	
 	
 	$("#drop-zone").on('click', '.tile', function(){
 		clicked(this, ".tile");
 		fillValues($(this).attr('id'));
+		setUnits($(".tile.clicked").text(), document.getElementById("value-input"));
 	});
 	
 	$("#recipe-footer").on('click','#sprayButton',function(){
@@ -141,27 +143,23 @@ $(document).ready(function(){
 });
 
 
-function setUnits(text, label){
+function setUnits(text, el){
 	if (text=="Elevation"){
-		label.html("&nbsp;km");
-	}
-	if (text=="Wind Speed"){
-		label.html("&nbsp;km/h");
-	}
-	if (text=="Wind Direction"){
-		label.html("&nbsp;°");
-	}
-	if (text=="Temperature"){
-		label.html("&nbsp;°F");
-	}
-	if (text=="Humidity"){
-		label.html("&nbsp;%");
-	}
-	if (text=="Rain"){
-		label.html("&nbsp;mm");
-	}
-	if (text=="Cloud Coverage"){
-		label.html("&nbsp;%");
+		el.placeholder = "Value (km)";
+	}else if (text=="Wind Speed"){
+		el.placeholder="Value (km/h)";
+	}else if (text=="Wind Direction"){
+		el.placeholder="Value (°)";
+	}else if (text=="Temperature"){
+		el.placeholder="Value (°C)";
+	}else if (text=="Humidity"){
+		el.placeholder="Value(%)";
+	}else if (text=="Rain"){
+		el.placeholder="Value (mm)";
+	}else if (text=="Cloud Coverage"){
+		el.placeholder="Value (%)";
+	}else if (text=="Genotype"){
+		el.placeholder="Value";
 	}
 }
 
@@ -355,12 +353,15 @@ function getLatest(){
 		method: 'GET',
 		url: '/latest',
 		success: function (d) {
-			latest = d
+			setLatest(d);
 		},
 		error: function (d) {
 			 console.log("failure", d);
 		}
 	});
+}
+function setLatest(d){
+	latest = parseInt(d);
 }
 
 

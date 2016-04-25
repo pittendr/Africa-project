@@ -19,8 +19,8 @@ def change(request):
     if request.method == 'POST' and request.is_ajax():
         username = request.POST['user']
         user = User.objects.get(username=username)
-        permission = Permission.objects.get(codename='is_admin')
-        if user.has_perm('auth.is_admin'):
+        permission = Permission.objects.get(codename='is_creator')
+        if user.has_perm('auth.is_creator'):
             user.user_permissions.remove(permission)
         else:
             user.user_permissions.add(permission)

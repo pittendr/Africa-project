@@ -21,8 +21,7 @@ def latest(request):
             last = last.id
         else:
             last = 0;
-        context = {'latest':last}
-        return render(request, 'notifications/latest.html', context)
+        return HttpResponse(last)
     else:
         raise Http404("Page not found")
 
