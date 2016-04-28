@@ -26,7 +26,7 @@ SECRET_KEY = '%ax#v)wh6k0ek&mxv6%b3!y8!n)no02)%od4ld)^zb#43iz(1$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '104.236.165.100']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '159.203.45.56']
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 28800
@@ -49,7 +49,8 @@ EMAIL_PORT = 587
 #Security Settings
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
-SECURE_SSL_REDIRECT = True
+#Need SSL Certificate. Uncomment once purchased.
+#SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = True

@@ -106,10 +106,10 @@ def getFIAValues(recipe, x):
         alert = item[ALT_COL]
         range = item[RAN_COL]
         if firstIter:
-            sqlStatement += " "+ str(convertName(variable)+ " " + str(logic) + " " + str(value)) 
+            sqlStatement += " "+ str(str(convertname(variable))+ " " + str(logic) + " " + str(value)) 
             firstIter = False
         else:
-            sqlStatement += " and " + str(convertName(variable)+ " " + str(logic) + " " + str(value)) 
+            sqlStatement += " and " + str(str(convertName(variable))+ " " + str(logic) + " " + str(value)) 
     
     x.execute(sqlStatement)
 
