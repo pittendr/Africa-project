@@ -22,10 +22,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '%ax#v)wh6k0ek&mxv6%b3!y8!n)no02)%od4ld)^zb#43iz(1$'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '104.236.165.100']
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 28800
@@ -39,11 +40,21 @@ EMAIL_USE_TLS = True
 #Using google for now. Set up own smtp?
 EMAIL_HOST = 'smtp.gmail.com'
 
-EMAIL_HOST_USER = '@gmail.com'
+EMAIL_HOST_USER = 'fianotificationgenerator@gmail.com'
 
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = 'expertsystem'
 
 EMAIL_PORT = 587
+
+#Security Settings
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+X_FRAME_OPTIONS = 'DENY'
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -94,6 +105,7 @@ WSGI_APPLICATION = 'expertsystem.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+	
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

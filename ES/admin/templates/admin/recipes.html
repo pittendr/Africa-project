@@ -1,6 +1,6 @@
 {% if recipes %}
 	{% for recipe in recipes %}
-		{% if user.get_username == "eis" or request.user == recipe.owner %}
+		{% if 'auth.is_admin' in user.get_all_permissions or request.user == recipe.owner %}
 			{% if recipe.multiple == "start" %}		
 				<li><a>{{recipe.recipe_name}}</a>
 					<div class="block" style="display:none;">

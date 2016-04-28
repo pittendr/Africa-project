@@ -23,6 +23,7 @@ urlpatterns = [
         'django.contrib.auth.views.password_reset_confirm',
         name='password_reset_confirm'
 	),	
+	url(r'^reset-password/', 'django.contrib.auth.views.password_reset'),
 	url('^password-reset-complete/', 
         auth_views.password_reset_complete,
 		name = 'password_reset_complete',
