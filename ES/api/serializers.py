@@ -2,6 +2,7 @@ from rest_framework import serializers
 from api.models import FIA, Recipe 
 from django.contrib.auth.models import User
 
+#Serializes FIA data for use by api
 class FIASerializer(serializers.ModelSerializer):
     class Meta:
         model = FIA
@@ -34,7 +35,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'recipes')
-		
+
+#Serializes Recipe data for use by api
 class RecipeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:

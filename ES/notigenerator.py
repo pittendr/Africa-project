@@ -1,10 +1,10 @@
-#!../../esenv/bin/python
 import MySQLdb
 import simplejson
 import pyowm
 import urllib
 import json
 import smtplib
+import math
 
 ID_COL = 0
 VAR_COL = 1
@@ -39,38 +39,16 @@ def getRecipeList(recipes):
     if matchingList:
         list.append(matchingList)
         matchingList = []
-	
     return list
 
 def getFIAList(recipelist,x):
-    fiaValues = []
     fiaList = []
 	
     for recipes in recipelist:
-        if isinstance(recipes, list):
-            firstIter = True			
-            for recipe in recipes:
-                count=0
-                if not firstIter:
-                    variable = recipe[VAR_COL]
-                    logic = recipe[LOG_COL]
-                    value = recipe[VAL_COL]
-                    while count < len(fiaValues):					
-                        expression = str(fiaValues[count][getArrayIndex(variable)]) + str(logic) + str(value)
-                        if not eval(expression):
-                            del fiaValues[count]
-                        count+=1								
-                else:
-                    fiaValues = getFIAValues(recipe,x)
-                    if len(fiaValues)==0:
-                        break;
-                    firstIter=False
+            fiaValues = getFIAValues(recipes,x)
             for values in fiaValues:
                 fiaList.append(values)
-        else:
-            singlefiaValues = getFIAValues(recipes, x)
-            for values in singlefiaValues:
-                fiaList.append(values)
+				
     return fiaList
 def convertName(name):
     if name == 'Elevation':
@@ -106,19 +84,35 @@ def getArrayIndex(name):
     elif name == 'Alert':
         return 15
     elif name == 'Phone':
-        return 1
+        return 1	
+    elif name == 'GPS':
+        return 2
+    elif name == 'Range':
+        return 16
 
 def getFIAValues(recipe, x):
-    variable = recipe[VAR_COL]
-    logic = recipe[LOG_COL]
-    value = recipe[VAL_COL]
-    alert = recipe[ALT_COL]
-    if logic == '>':
-        x.execute("""SELECT * FROM api_fia WHERE """+convertName(variable)+""" > '%s'""", [float(value)])    
-    elif logic == '<':
-        x.execute("""SELECT * FROM api_fia WHERE """+convertName(variable)+""" < '%s'""", [float(value)])
-    elif logic =='=':
-        x.execute("""SELECT * FROM api_fia WHERE """+convertName(variable)+""" = '%s'""", [float(value)])
+    count = len(recipe)
+    sqlStatement = "SELECT * FROM api_fia WHERE"
+    firstIter = True
+    variable = None
+    logic = None
+    value = None
+    alert = None
+    range = None
+    for item in recipe:
+        variable = item[VAR_COL]
+        logic = item[LOG_COL]
+        value = item[VAL_COL]
+        alert = item[ALT_COL]
+        range = item[RAN_COL]
+        if firstIter:
+            sqlStatement += " "+ str(convertName(variable)+ " " + str(logic) + " " + str(value)) 
+            firstIter = False
+        else:
+            sqlStatement += " and " + str(convertName(variable)+ " " + str(logic) + " " + str(value)) 
+    
+    x.execute(sqlStatement)
+
     array = []
     count = 0
     y=x.fetchall()
@@ -128,21 +122,63 @@ def getFIAValues(recipe, x):
         while count2 < len(y[count]):
             array2.append(y[count][count2])
             count2+=1
-        array2.append(alert)			
+        array2.append(alert)
+        array2.append(range)		
         array.append(array2)
         count+=1
+		
     return array
 
-def getNumberAndAlert(list):
+def getGPSAndAlert(list):
     array = []
     count = 0
     for item in list:
         array2 = []
-        array2.append(item[getArrayIndex('Phone')])
+        array2.append(item[getArrayIndex('GPS')])
         array2.append(item[getArrayIndex('Alert')])
+        array2.append(item[getArrayIndex('Range')])
         array.append(array2)
     return array
 
+def removeDuplicates(x):
+    a = []
+    for i in x:
+        if i not in a:
+            a.append(i)
+    return a
+
+def findFarms(list, x):
+    farmList = []
+    farmFeatures = []
+    x.execute("""SELECT * FROM api_fia""")
+    farms = x.fetchall()
+    for item in list:
+        range=item[2]
+        gps1 = json.loads(item[0])
+        lat1 = float(gps1['latitude'])
+        lon1 = float(gps1['longitude'])
+        for farm in farms:
+            gps2 = json.loads(farm[2])
+            lat2 = float(gps2['latitude'])
+            lon2 = float(gps2['longitude'])
+            R = 6371
+            dLat = math.radians(lat2-lat1)
+            dLon = math.radians(lon2-lon1)
+            lat1 = math.radians(lat1)
+            lat2 = math.radians(lat2)
+
+            a = math.sin(dLat/2) * math.sin(dLat/2) + math.sin(dLon/2) * math.sin(dLon/2) * math.cos(lat1) * math.cos(lat2)
+            c = 2 * math.atan2(math.sqrt(a),math.sqrt(1-a))
+            d = R * c
+            if d <= range:
+                farmFeatures.append(farm[1])
+                farmFeatures.append(item[1])
+                farmList.append(farmFeatures)
+                farmFeatures = []
+                print farmList
+
+    return removeDuplicates(farmList)
+	
 def sendSMS(list):
     #using google smtp
     server = smtplib.SMTP( "smtp.gmail.com", 587 )
@@ -157,19 +193,20 @@ def sendSMS(list):
             server.sendmail( 'eis', phone+'@sms.fido.ca', 'You need to spray' )
         else: 
             server.sendmail( 'eis', phone+'@sms.fido.ca', 'You need to scout' )
-
+   
 if __name__ == '__main__':
     try:
         #connect to mysql db
         conn = MySQLdb.connect(host = "localhost", user = "eis", passwd = "188esplanade", db="expertsystem")
         x=conn.cursor()
-        x.execute("""SELECT * FROM notifications_recipe""");
+        x.execute("""SELECT * FROM api_recipe""")
         recipevals = x.fetchall()
 		
         recipeList = getRecipeList(recipevals)
         finalList = getFIAList(recipeList,x)
-		#have to remove duplicate phone numbers
-        sendSMS(getNumberAndAlert(finalList))
+        finalList = removeDuplicates(finalList)
+        finalList = getGPSAndAlert(finalList)
+        print findFarms(finalList, x)
     except Exception, Argument:
         print Argument
     finally:

@@ -1,6 +1,7 @@
 var csrftoken = getCookie('csrftoken');
 
 $(document).ready(function(){
+	//Display/Hide list details when user clicks on list entry
 	$('.list').on('click', 'li a', function(){
 		var elem = $(this).parent().find(".block")
 		if($(this).hasClass('clicked')){
@@ -10,6 +11,8 @@ $(document).ready(function(){
 		}
 		$(this).toggleClass("clicked");
 	});
+	
+	//Display/Hide lists when user clicks on panel head
 	$(document).on('click', '#panelhead', function(){
 		var elem = $(this).parent().find("#panelfoot")
 		if($(this).hasClass('clicked')){
@@ -19,10 +22,13 @@ $(document).ready(function(){
 		}
 		$(this).toggleClass("clicked");
 	});
+	//Change user's creator status when check/uncheck checkbox
 	$('.list').on('change', '.admincheck', function(){
 		username = $(this).closest('li').find(">:first-child").text();
 		changeAdmin(username)
 	});
+	
+	//Delete user when delete button is clicked
 	$('.list').on('click', '.deleteUser', function(){
 		username = $(this).closest('li').find(">:first-child").text();
 		if(confirm("Are you sure you want to delete "+username+"'s account? This cannot be reversed.")){
@@ -30,6 +36,7 @@ $(document).ready(function(){
 		}
 		
 	});
+	//Dropdown functionality: toggle dropdown, change text.
 	$("li").on("click", ".custom-dropdown", function(){
 		$(this).toggleClass('active');
 		if($(".custom-dropdown").not($(this)).hasClass("active")){
@@ -45,6 +52,8 @@ $(document).ready(function(){
 	$("li").on("click", "#logicdrop .custom-drop li", function(){
 		$(this).closest("#logicdrop").find('span').text($(this).text());
 	});
+	
+	//Perform ajax PATCH request to edit recipe values
 	$("li").on("click", '.save', function(){
 		var recipeId =[];
 		$(this).parent().find('.row').each(function(index, element){
@@ -89,6 +98,8 @@ $(document).ready(function(){
 				
 		}
 	});
+	
+	//Perform ajax DELETE request to delete recipe entries
 	$("li").on("click", '.delete', function(){
 		var recipeId =[];
 		$(this).parent().find('.row').each(function(index, element){
@@ -130,11 +141,13 @@ $(document).ready(function(){
 	});
 });
 
+
+//Check to see if csrf is required for http request
 function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 
+//Get cookie to perform csrf unsafe method
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -150,6 +163,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
+//Use ajax to change user creator permission from server
 function changeAdmin(user){
 	$.ajaxSetup({
 		beforeSend: function(xhr, settings) {
@@ -170,6 +184,8 @@ function changeAdmin(user){
 		}
 	});
 }
+
+//Use ajax to to delete user from server
 function deleteUser(user){
 	$.ajaxSetup({
 		beforeSend: function(xhr, settings) {

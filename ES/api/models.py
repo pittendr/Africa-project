@@ -2,22 +2,23 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 
 from django.db import models
-    
+
+#Models for SQL db
 class FIA(models.Model):
-    phone = models.CharField(max_length=255, blank=True, default="unable to collect phone")
-    gps = models.CharField(max_length=255)
-    aid = models.CharField(max_length=255)
-    mac = models.CharField(max_length=255)
-    serial = models.CharField(max_length=255)
-    pests = models.CharField(max_length=255)
-    time = models.CharField(max_length=255)
-    elevation = models.FloatField(blank=True)
-    windspeed = models.FloatField(blank=True)
-    winddir = models.FloatField(blank=True)
-    temp = models.FloatField(blank=True)
-    humidity = models.FloatField(blank=True)
-    rain = models.FloatField(blank=True)
-    clouds = models.FloatField(blank=True)
+    phone = models.CharField(max_length=255, blank=True, default="unable to collect phone", null=True)
+    gps = models.CharField(max_length=255, blank=True, null=True)
+    aid = models.CharField(max_length=255, blank=True, null=True)
+    mac = models.CharField(max_length=255, blank=True, null=True)
+    serial = models.CharField(max_length=255, blank=True, null=True)
+    pests = models.CharField(max_length=255, blank=True, null=True)
+    time = models.CharField(max_length=255, blank=True, null=True)
+    elevation = models.FloatField(blank=True, null=True)
+    windspeed = models.FloatField(blank=True, null=True)
+    winddir = models.FloatField(blank=True, null=True)
+    temp = models.FloatField(blank=True, null=True)
+    humidity = models.FloatField(blank=True, null=True)
+    rain = models.FloatField(blank=True, null=True)
+    clouds = models.FloatField(blank=True, null=True)
 
 class Recipe(models.Model):
     owner = models.ForeignKey(User, related_name='recipes')

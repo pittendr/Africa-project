@@ -5,16 +5,17 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import HttpResponseForbidden, HttpResponse
 import json
 
+#Main admin view. Renders html while passing list of recipes and users to template
 @ensure_csrf_cookie
 def index(request):
     if not request.user.is_authenticated():
         return redirect('%s?next=%s' % ('../login/', request.path))
     recipes = Recipe.objects.all()
     users = User.objects.all()
-    permissions = Permission.objects.get(codename="is_admin")
-    context = {'recipes' : recipes, 'users' : users, 'permissions':permissions}
+    context = {'recipes' : recipes, 'users' : users}
     return render(request, 'admin/index.html', context)
 
+#Handles post requests to change user creator permissions
 def change(request):
     if request.method == 'POST' and request.is_ajax():
         username = request.POST['user']
@@ -30,6 +31,7 @@ def change(request):
     else:
         raise Http404("Page not found")
 
+#Handles post requests to delete user
 def delete(request):
     if request.method == 'POST' and request.is_ajax():
         username = request.POST['user']
