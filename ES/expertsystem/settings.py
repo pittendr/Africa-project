@@ -49,11 +49,17 @@ EMAIL_PORT = 587
 #Security Settings
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
+
 #Need SSL Certificate. Uncomment once purchased.
 #SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = True
+#CSRF_COOKIE_SECURE = True
+#SESSION_COOKIE_SECURE = True
+
+#Have to implement different method of getting CSRF cookie
+#from javascript if we want to enable CSRF_COOKIE_HTTPONLY
+#https://groups.google.com/forum/#!msg/django-users/-keb1_8tHpU/Xch6KuSwjkcJ
+#CSRF_COOKIE_HTTPONLY = True
+
 X_FRAME_OPTIONS = 'DENY'
 
 
