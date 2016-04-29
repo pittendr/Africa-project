@@ -14,6 +14,8 @@ RAN_COL = 4
 MAT_COL = 6
 ALT_COL = 7
 
+#Create a list of all recipes, multiple recipes will be put into a list and that list will subsequently be put into the final recipe list
+#example final recipe list = [recipe1, recipe2, [recipe3a, recipe3b, recipe3c], recipe4, [recipe5a, recipe5b]]
 def getRecipeList(recipes): 
     oldmatch = -1
     list = []
@@ -41,6 +43,7 @@ def getRecipeList(recipes):
         matchingList = []
     return list
 
+#Creates a list of all fia values that match the associated recipe list
 def getFIAList(recipelist,x):
     fiaList = []
 	
@@ -50,6 +53,8 @@ def getFIAList(recipelist,x):
                 fiaList.append(values)
 				
     return fiaList
+
+#Converts variable names to database variable names
 def convertName(name):
     if name == 'Elevation':
 	    return 'elevation'
@@ -65,7 +70,8 @@ def convertName(name):
         return 'rain'
     elif name == 'Cloud Coverage':
         return 'clouds'
-		
+
+#gets fia array index of certain values
 def getArrayIndex(name):
     if name == 'Elevation':
 	    return 8
@@ -90,6 +96,7 @@ def getArrayIndex(name):
     elif name == 'Range':
         return 16
 
+#queries the mysql db for the fia entries that match the associated recipes
 def getFIAValues(recipe, x):
     count = len(recipe)
     sqlStatement = "SELECT * FROM api_fia WHERE"
@@ -99,6 +106,7 @@ def getFIAValues(recipe, x):
     value = None
     alert = None
     range = None
+    #build the sqlstatement for the recipe
     for item in recipe:
         variable = item[VAR_COL]
         logic = item[LOG_COL]
@@ -112,7 +120,8 @@ def getFIAValues(recipe, x):
             sqlStatement += " and " + str(str(convertName(variable))+ " " + str(logic) + " " + str(value)) 
     
     x.execute(sqlStatement)
-
+    
+    #append the range and the alert type to the fia value
     array = []
     count = 0
     y=x.fetchall()
@@ -129,6 +138,7 @@ def getFIAValues(recipe, x):
 		
     return array
 
+#creates a new array with only the gps, alert, and range of the fia entry
 def getGPSAndAlert(list):
     array = []
     count = 0
@@ -147,6 +157,7 @@ def removeDuplicates(x):
             a.append(i)
     return a
 
+#takes the list of farms that match the recipe and finds all farms within the specified range of the initial farms. Fills array with the farm phone and alert type
 def findFarms(list, x):
     farmList = []
     farmFeatures = []
@@ -178,7 +189,8 @@ def findFarms(list, x):
                 print farmList
 
     return removeDuplicates(farmList)
-	
+
+#Sends a text to the farms using google smtp server. Only works with fido carrier for now (Should add different sms gateways)
 def sendSMS(list):
     #using google smtp
     server = smtplib.SMTP( "smtp.gmail.com", 587 )
@@ -201,11 +213,14 @@ if __name__ == '__main__':
         x=conn.cursor()
         x.execute("""SELECT * FROM api_recipe""")
         recipevals = x.fetchall()
-		
+	#get list of recipes	
         recipeList = getRecipeList(recipevals)
+        #get list of fia entries that match recipes
         finalList = getFIAList(recipeList,x)
         finalList = removeDuplicates(finalList)
+        #get list of gps, alert, range of matching fia entries
         finalList = getGPSAndAlert(finalList)
+        #get list of farms within range of matching fia entries
         print findFarms(finalList, x)
     except Exception, Argument:
         print Argument
