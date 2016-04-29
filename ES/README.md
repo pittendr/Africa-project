@@ -166,5 +166,32 @@ python manage.py createsuperuser
 And follow the onscreen instructions. The following section assumes the superuser is named "admin".
 To create the website permissions and give them to the superuser we must use the django shell:
 ```
+python manage.py shell
+```
+From the shell:
+```
+>>> from django.contrib.auth.models import User, Permission
+>>> from django.contrib.contenttypes.models import ContentType
+>>> user = User.objects.get(username="admin")
+>>> content_type = ContentType.objects.get_for_model(User)
+>>> permission = Permission.objects.create(codename='is_creator', name='Can Create', content_type=content_type)
+>>> user.user_permissions.add(permission)
+>>> permission = Permission.objects.create(codename='is_admin', name='Is Admin', content_type=content_type)
+>>> user.user_permissions.add(permission)
+```
+And check that the permissions were succesfully assigned:
+```
+>>> user.user_permissions.all()
+[<Permission: auth | user | Is Admin>, <Permission: auth | user | Can Create>]
+```
+To create a new user and add existing permissions:
+```
+python manage.py shell
+>>> from django.contrib.auth.models import User, Permission
+>>> user = User.objects.create_user(username="test", password="test")
+>>> permission = Permission.objects.get(codename="is_creator")
+>>> user.user_permissions.add(permission)
+>>> user.user_permissions.all()
+[<Permission: auth | user | Can Create>]
 ```
 
