@@ -63,7 +63,7 @@ public class SampleSelection extends AppCompatActivity {
 
 
     SharedPreferences settings;
-    String server = "104.236.165.100";
+    String server = "159.203.45.56";
 
     ListView listView;
     ListViewAdapter adapter;
@@ -111,11 +111,11 @@ public class SampleSelection extends AppCompatActivity {
 
     String date;
     String pests;
-    String phone;
+    String phone = null;
     SharedPreferences savedLocation;
 
     SharedPreferences savedPhone;
-    JSONObject usableLocation = new JSONObject();
+    String usableLocation = "null";
     String op;
 
     SharedPreferences savedTime;
@@ -132,15 +132,11 @@ public class SampleSelection extends AppCompatActivity {
          dialog = new ProgressDialog(SampleSelection.this);
 
         savedLocation = getSharedPreferences("location", MODE_PRIVATE);
-        try {
-            usableLocation = new JSONObject(savedLocation.getString("locationAddress", usableLocation.toString()));
-        }catch(JSONException e){
-            //TODO
-        }
+        usableLocation = savedLocation.getString("locationAddress", usableLocation);
         savedTime = getSharedPreferences("time", MODE_PRIVATE);
         usableTime = savedTime.getLong("timeMS", usableTime);
         if ((System.currentTimeMillis() - usableTime)>1800000){
-            usableLocation=null;
+            usableLocation="null";
         }
 
         if (!checkService()){
@@ -148,7 +144,7 @@ public class SampleSelection extends AppCompatActivity {
         }
 
 
-        savedPhone = getSharedPreferences("phone", MODE_PRIVATE);
+        savedPhone = getSharedPreferences("install", MODE_PRIVATE);
 
         tmp = (ImageView) findViewById(rectangleViews[countGreen+countRed]);
         tmp.setImageResource(R.drawable.flash);
@@ -460,7 +456,7 @@ public class SampleSelection extends AppCompatActivity {
 
         TelephonyManager tMgr = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         op = tMgr.getNetworkOperatorName();
-        phone = savedPhone.toString();
+        phone = savedPhone.getString("phone", phone);
         androidid = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         serialNumber = Build.SERIAL;
@@ -480,6 +476,27 @@ public class SampleSelection extends AppCompatActivity {
             fos.close();}catch (Exception e){
             //TODO
         }*/
+        if (macAddress==null){
+            macAddress = "null";
+        }
+        if (phone==null){
+            phone = "null";
+        }
+        if (androidid==null){
+            androidid = "null";
+        }
+        if (serialNumber==null){
+            serialNumber = "null";
+        }
+        if (date==null){
+            date = "null";
+        }
+        if (pests==null){
+            pests = "null";
+        }
+        if (usableLocation==null){
+            usableLocation = "null";
+        }
         try{
             postMessage.put("phone", phone);
             postMessage.put("gps", usableLocation);
@@ -522,7 +539,7 @@ public class SampleSelection extends AppCompatActivity {
             values.put(dbContract.FeedEntry.COLUMN_NAME_TIME, date);
             values.put(dbContract.FeedEntry.COLUMN_NAME_PESTS, pests);
             if (usableLocation!=null){
-                values.put(dbContract.FeedEntry.COLUMN_NAME_GPS, usableLocation.toString());
+                values.put(dbContract.FeedEntry.COLUMN_NAME_GPS, usableLocation);
             }else{
                 values.put(dbContract.FeedEntry.COLUMN_NAME_GPS, "null");
             }
@@ -552,7 +569,7 @@ public class SampleSelection extends AppCompatActivity {
 
     private class postRequest extends AsyncTask<String, Void, String>{
 
-        String url ="http://"+server+"/api";
+        String url ="http://"+server+"/fia/";
 
         HttpClient httpclient = new DefaultHttpClient();
 

@@ -77,6 +77,7 @@ public class OptionsScreen extends AppCompatActivity {
         scoutVideo = (getResources().getResourceName(R.raw.scoutvideo)).split("raw/");
         sprayVideo = (getResources().getResourceName(R.raw.sprayvideo)).split("raw/");
 
+        //Get the videos and their thumbnails and add them to the search list
         Uri eURI = Uri.parse("android.resource://" + getPackageName() + "/"
                 + R.raw.explanationvideo);
         MediaMetadataRetriever eretriever = new MediaMetadataRetriever();
@@ -133,6 +134,7 @@ public class OptionsScreen extends AppCompatActivity {
 
             }
         });
+
         searchInput.addTextChangedListener(
                 new TextWatcher() {
                     @Override
@@ -153,6 +155,7 @@ public class OptionsScreen extends AppCompatActivity {
                 }
         );
     }
+
 
     public void loadDisplayVideos(View view){
         soundPool.play(soundId,1,1,0,0,1);

@@ -75,7 +75,7 @@ public class MainScreen extends AppCompatActivity {
     ImageView fullscreen;
     int position =0;
 
-    private String ipString = "104.236.165.100";
+    private String ipString = "159.203.45.56";
 
     ImageButton ip;
 
@@ -111,6 +111,7 @@ public class MainScreen extends AppCompatActivity {
         fullscreen = new ImageView(getApplicationContext());
         final Intent videointent = new Intent(this, searchvideo.class);
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             createNewSoundPool();
         }else{
@@ -122,6 +123,7 @@ public class MainScreen extends AppCompatActivity {
         ipString = settings.getString("ipAddress", ipString);
 
 
+        //Set the intro video to begin playing
         soundId = soundPool.load(getApplicationContext(), R.raw.buttonclick, 1);
         final CustomMediaController mediaController = new CustomMediaController(this, true);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
@@ -150,6 +152,7 @@ public class MainScreen extends AppCompatActivity {
             });
         }
 
+        //When skip button is pressed skip to the end
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,6 +163,7 @@ public class MainScreen extends AppCompatActivity {
             }
         });
 
+        //When fullscreen button is pressed start the searchvideo activity, which plays videos in full screen
         fullscreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,12 +173,15 @@ public class MainScreen extends AppCompatActivity {
             }
         });
 
+        //When the settings button is pressed, open the ip address dialog
         ip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Create dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainScreen.this);
                 builder.setTitle("Please Enter the API address:");
                 final EditText input = new EditText(MainScreen.this);
+                //Set text to the shared preferences string that contains the server info
                 input.setText(ipString);
                 input.setInputType(InputType.TYPE_CLASS_PHONE);
                 builder.setView(input);
@@ -182,9 +189,11 @@ public class MainScreen extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ipString = input.getText().toString();
+                        //store the new ip address string to the shared preferences
                         edit = settings.edit();
                         edit.putString("ipAddress", ipString);
                         edit.apply();
+                        //Hide keyboard
                         InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(
                                 Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
@@ -204,7 +213,7 @@ public class MainScreen extends AppCompatActivity {
             }
         });
 
-
+        //If GPS is not enabled, ask user to enable it
         if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
 
             final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
@@ -234,13 +243,14 @@ public class MainScreen extends AppCompatActivity {
 
 
     }
-
+    //When user returns from searchvideo activity (closes full screen), continue playing video at position they left
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         position=data.getIntExtra("videoposition",0);
         introVideo.seekTo(position);
         introVideo.start();
     }
 
+    //Sound object to create notification noises
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     protected void createNewSoundPool(){
         AudioAttributes attributes = new AudioAttributes.Builder()
@@ -256,6 +266,7 @@ public class MainScreen extends AppCompatActivity {
         soundPool = new SoundPool(soundId ,AudioManager.STREAM_MUSIC,0);
     }
 
+    //When user clicks next, start next activity
     public void nextClick (View view){
         introVideo.stopPlayback();
         soundPool.play(soundId,1,1,0,0,1);
@@ -269,6 +280,7 @@ public class MainScreen extends AppCompatActivity {
 
     }
 
+    //When user presses back, end activity
     @Override
     public void onBackPressed() {
 
@@ -278,6 +290,7 @@ public class MainScreen extends AppCompatActivity {
         this.finish();
     }
 
+    //Custom video toolbar, includes skip and fullscreen icon
     public class CustomMediaController extends MediaController {
 
 
@@ -324,6 +337,7 @@ public class MainScreen extends AppCompatActivity {
         }
     }
 
+    //Get the stored data from the sql database and store it in an array
     private void getSQLdata(){
 
         dbHelper mDbHelper = new dbHelper(getApplicationContext());
@@ -351,9 +365,10 @@ public class MainScreen extends AppCompatActivity {
         db.close();
     }
 
+    //asynchronous task to perform post request in background
     private class postRequest extends AsyncTask<String, Void, String> {
 
-        String url ="http://"+ipString+"/api";
+        String url ="http://"+ipString+"/fia/";
 
         HttpClient httpclient = new DefaultHttpClient();
 
@@ -366,6 +381,7 @@ public class MainScreen extends AppCompatActivity {
 
 
             try {
+
                 httppost.setEntity((new ByteArrayEntity(postMessage.toString().getBytes("UTF8"))));
                 httppost.setHeader("Content-type", "application/json");
                 response = httpclient.execute(httppost);
@@ -381,7 +397,7 @@ public class MainScreen extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String Result){
-
+            //if the server accepts the post data, delete data from database and move on to next line
             if(code==201) {
                 dbHelper mDbHelper = new dbHelper(getApplicationContext());
                 SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -398,6 +414,7 @@ public class MainScreen extends AppCompatActivity {
 
     }
 
+    //Create post message and execute post request
     private void writeJSON(int cnt){
         /*try {
             if(cnt>=arrList.size()){
@@ -416,13 +433,52 @@ public class MainScreen extends AppCompatActivity {
                 done = true;
                 return;
             }
-            postMessage.put("phone", arrList.get(cnt)[1]);
-            postMessage.put("gps", arrList.get(cnt)[6]);
-            postMessage.put("aid", arrList.get(cnt)[4]);
-            postMessage.put("mac", arrList.get(cnt)[2]);
-            postMessage.put("serial", arrList.get(cnt)[3]);
-            postMessage.put("time", arrList.get(cnt)[5]);
-            postMessage.put("pests", arrList.get(cnt)[7]);
+
+            if (arrList.get(cnt)[1]==null){
+                postMessage.put("phone", "null");
+            }else{
+                postMessage.put("phone", arrList.get(cnt)[1]);
+            }
+
+            if (arrList.get(cnt)[6]==null){
+                postMessage.put("gps", "null");
+            }else{
+                postMessage.put("gps", arrList.get(cnt)[6]);
+            }
+
+            if (arrList.get(cnt)[4]==null){
+                postMessage.put("aid", "null");
+            }else{
+                postMessage.put("aid", arrList.get(cnt)[4]);
+            }
+
+            if (arrList.get(cnt)[2]==null){
+                postMessage.put("mac", "null");
+            }else{
+                postMessage.put("mac", arrList.get(cnt)[2]);
+            }
+
+            if (arrList.get(cnt)[3]==null){
+                postMessage.put("serial", "null");
+            }else{
+                postMessage.put("serial", arrList.get(cnt)[3]);
+            }
+
+            if (arrList.get(cnt)[5]==null){
+                postMessage.put("time", "null");
+            }else{
+                postMessage.put("time", arrList.get(cnt)[5]);
+            }
+
+            if (arrList.get(cnt)[7]==null){
+                postMessage.put("pests", "null");
+            }else{
+                postMessage.put("pests", arrList.get(cnt)[7]);
+            }
+
+
+
+
             new postRequest().execute();
         }catch(Exception e){
             //TODO
@@ -446,6 +502,7 @@ public class MainScreen extends AppCompatActivity {
 
     }
 
+    //Make sure all permissions are set and phone number is acquired
     @Override
     protected void onStart(){
         if(android.os.Build.VERSION.SDK_INT >= 23) {
@@ -460,10 +517,13 @@ public class MainScreen extends AppCompatActivity {
             }else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.READ_SMS}, 1);
             }
+        }else{
+            getPhone();
         }
         super.onStart();
     }
 
+    //Chain permissions
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -478,42 +538,47 @@ public class MainScreen extends AppCompatActivity {
         } else if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_SMS}, 1);
         }else {
-            if (install.getBoolean("firstrun", true) || install.getString("phone", "").equals("")) {
-                TelephonyManager tMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-                String p = tMgr.getLine1Number();
-                if (p.equals("")) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainScreen.this);
-                    builder.setTitle("Please Phone Number:");
-                    builder.setMessage("The FIA app requires your phone number to send notifications of potential pest outbreaks");
-                    final EditText input = new EditText(MainScreen.this);
-                    input.setInputType(InputType.TYPE_CLASS_PHONE);
-                    builder.setView(input);
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            phone = input.getText().toString();
-                            installedit = install.edit();
-                            installedit.putString("phone", phone);
-                            installedit.apply();
-                            InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(
-                                    Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
-                        }
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(
-                                    Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
-                        }
-                    });
+            getPhone();
+        }
+    }
 
-                    builder.show();
-                }
-                install.edit().putBoolean("firstrun", false).apply();
+    //Ask user for phone number and store in shared preferences
+    private void getPhone(){
+        if (install.getBoolean("firstrun", true) || install.getString("phone", "").equals("")) {
+            TelephonyManager tMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+            String p = tMgr.getLine1Number();
+            if (p.equals("")) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainScreen.this);
+                builder.setTitle("Please Phone Number:");
+                builder.setMessage("The FIA app requires your phone number to send notifications of potential pest outbreaks");
+                final EditText input = new EditText(MainScreen.this);
+                input.setInputType(InputType.TYPE_CLASS_PHONE);
+                builder.setView(input);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        phone = input.getText().toString();
+                        installedit = install.edit();
+                        installedit.putString("phone", phone);
+                        installedit.apply();
+                        InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(
+                                Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(
+                                Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+                    }
+                });
+
+                builder.show();
             }
+            install.edit().putBoolean("firstrun", false).apply();
         }
     }
 
