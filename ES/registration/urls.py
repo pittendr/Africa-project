@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 
 from . import views
-
+#Most of these urls point to built-in django views. Templates are in the template directory.
 urlpatterns = [
     url('^signup/', views.signup),
     url('^login/', auth_views.login),
