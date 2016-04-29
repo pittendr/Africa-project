@@ -6,7 +6,7 @@ The following guides were used to help with the set up:
 https://www.digitalocean.com/community/tutorials/how-to-serve-django-applications-with-apache-and-mod_wsgi-on-ubuntu-14-04
 https://www.digitalocean.com/community/tutorials/how-to-use-mysql-or-mariadb-with-your-django-application-on-ubuntu-14-04
 
-**Creating new sudo user**
+####Creating new sudo user
 For security reasons, the project will be set up under a new sudo user rather than the default root user
 To create a new sudo user:
 
@@ -22,7 +22,7 @@ eis     ALL=(ALL:ALL) ALL
 
 The following sections assume you are working under the eis user. If not, make sure that any paths, usernames, etc are correct for the user you are working under
 
-**Setting up Virtual Environment**
+####Setting up Virtual Environment
 Install pip, virtualenv, and create the project directory:
 ```
 sudo apt-get update
@@ -50,13 +50,13 @@ sudo pip install simplejson
 sudo pip install djangorestframework
 ```
 
-**Cloning the project repository**
+####Cloning the project repository
 ```
 cd ~/es
 git clone https://github.com/pittendr/Africa-project.git
 ```
 
-**Installing mysql server**
+####Installing mysql server
 ```
 sudo apt-get update
 sudo apt-get install python-dev mysql-server libmysqlclient-dev
@@ -107,8 +107,8 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-**Installing apache and mod_wsgi**
-Install apache and mod_wsgi (mod_wsgi is an Apache HTTP Server module that provides a WSGI compliant interface for hosting Python based web applications under Apache):
+####Installing apache and mod_wsgi
+Install apache and mod_wsgi (mod_wsgi is an Apache module that provides a WSGI compliant interface for hosting Python based web applications under Apache):
 ```
 sudo apt-get update
 sudo apt-get install apache2 libapache2-mod-wsgi
@@ -157,7 +157,7 @@ sudo -i
 nano /var/log/apache2/error.log
 ```
 
-**Creating Django project superuser/Giving website permissions**
+####Creating Django project superuser/Giving website permissions
 To create the django superuser:
 ```
 cd ~/es/Africa-project/ES/
