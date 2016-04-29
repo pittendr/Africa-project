@@ -4,9 +4,12 @@ var data={};
 var recipeCount=0;
 var latest = null;
 $(document).ready(function(){
+	//Get Latest ID from db 
 	getLatest();
+	
 	clicked(document.getElementById("sprayButton"), '.alert');
 	
+	//Drag and drop initializaion
 	var drag = dragula([document.querySelector('#variable-zone'), document.querySelector('#drop-zone')], {
 		accepts: function (el, target, source, sibling) {
 			if(target == document.querySelector('#variable-zone')){
@@ -19,7 +22,9 @@ $(document).ready(function(){
 		removeOnSpill:true,
 	});
 	
+	//When the tile is dropped in the drop-zone
 	drag.on('drop', function(el, target, source, sibling){
+		//Set ID and add + sign before or after dropped element depending on location
 		$(el).attr('id', "recipe"+recipeCount);
 		$(el).css('margin-bottom','10px');
 		var span = document.createElement('span');
@@ -37,6 +42,7 @@ $(document).ready(function(){
 			}
 			
 		}
+		//Initialize the associated key in the data object 
 		recipeCount++;
 		clicked(el, '.tile');
 		clearValues();
@@ -52,13 +58,14 @@ $(document).ready(function(){
 		setUnits($(".tile.clicked").text(), document.getElementById("value-input"));
 	});
 	
-	
+	//Show the values associated with the dropped key
 	$("#drop-zone").on('click', '.tile', function(){
 		clicked(this, ".tile");
 		fillValues($(this).attr('id'));
 		setUnits($(".tile.clicked").text(), document.getElementById("value-input"));
 	});
 	
+	//Spray or Scout alerts
 	$("#recipe-footer").on('click','#sprayButton',function(){
 		clicked(document.getElementById("sprayButton"),'.alert');
 	});
@@ -66,10 +73,13 @@ $(document).ready(function(){
 		clicked(document.getElementById("scoutButton"),'.alert');
 	});
 	
+	//When the delete button is clicked for a tile
 	$("#value-box").on('click', "#delButton", function(){
 		if($(".tile.clicked").length){
 			console.log("deleting");
+			//Delete the associated key in the data object
 			deleteData($(".tile.clicked").attr('id'));
+			//Remove the element from the drop-zone
 			if($(".tile.clicked").next('span').length > 0 && $(".tile.clicked").prev('span').length>0){
 				$(".tile.clicked").next().remove();
 			}else if($(".tile.clicked").next('span').length > 0 && $(".tile.clicked").prev('span').length<=0){
@@ -84,8 +94,12 @@ $(document).ready(function(){
 		
 	});
 	
+	//When add button is clicked for a tile
 	$("#value-box").on('click', "#addButton", function(){
+		//Check that the recipe is valid
 		var text = checkRecipe();
+		//Add the values to the associated data object key
+		//check value is set to true to flag the recipe as filled 
 		if (text!=""){
 			alert(text);
 		}else{
@@ -115,12 +129,12 @@ $(document).ready(function(){
 		clicked(this, '.circle');
 	});
 	
-	
-
+	//When save button is clicked for a recipe
 	var tabledata=null;
 	$(document).on("click", "#saveButton", function(){
 		var i=1;
 		var sendData=[]
+		//fill the sendData array with the associated key values
 		for (var key in data){
 			if (data.hasOwnProperty(key)){
 				console.log(data[key]);
@@ -129,6 +143,7 @@ $(document).ready(function(){
 				}
 			}
 		}
+		//Make sure the recipe is valid and permorm ajax call
 		if(!badRecipes(sendData)){
 			name = prompt("Please enter the name of your Recipe");
 			if(name=="null"){
@@ -163,6 +178,7 @@ function setUnits(text, el){
 	}
 }
 
+//Initialize the variable box
 var variables = ["Elevation", "Temperature", "Wind Direction", "Wind Speed", "Humidity", "Rain", "Cloud Coverage", "Genotype"];
 function addOptions(){
 	var box = document.getElementById("variable-zone");
@@ -249,6 +265,7 @@ function badRecipes(recipeData){
 	}
 	return false;
 }
+
 function clearRecipes(){
 	$("#drop-zone").empty();
 	deleteData("all");
@@ -270,6 +287,7 @@ function deleteData(id){
 function ajaxCall(i, recipeData){
 	var multiple= "null";
 	var id = "null";
+	//Multiple key defines the recipes location for table formatting
 	if(recipeData.length!=1){
 		id = latest;
 		if(i==1){
@@ -280,6 +298,7 @@ function ajaxCall(i, recipeData){
 			multiple = "middle";
 		}
 	}
+	//get the csrf token for safe ajax post
 	$.ajaxSetup({
 		beforeSend: function(xhr, settings) {
 			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -288,6 +307,7 @@ function ajaxCall(i, recipeData){
 		}
 	});
 	console.log(i);
+	
 	$.ajax({
 		method: 'POST',
 		url: '/recipe/',
@@ -305,6 +325,7 @@ function ajaxCall(i, recipeData){
 		success: function (d) {
 			
 			console.log("success", i);
+			//Recursively call ajaxCall until all elements in recipe are POSted, then fill the table
 			if (i==recipeData.length){
 				latest+=i;
 				$('#tablebody').html(d);
@@ -321,6 +342,7 @@ function ajaxCall(i, recipeData){
 	});
 }
 
+//Get the csrf cookie
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -341,6 +363,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
+//Get the latest ID in the database
 function getLatest(){
 	$.ajaxSetup({
 		beforeSend: function(xhr, settings) {
