@@ -159,6 +159,12 @@ nano /var/log/apache2/error.log
 
 **Creating Django project superuser/Giving website permissions**
 To create the django superuser:
+```
 cd ~/es/Africa-project/ES/
 python manage.py createsuperuser
-follow on screen instructions (eis)
+```
+And follow the onscreen instructions. The following section assumes the superuser is named "admin".
+To create the website permissions and give them to the superuser we must use the django shell:
+```
+```
+
