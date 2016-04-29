@@ -307,7 +307,8 @@ function ajaxCall(i, recipeData){
 		}
 	});
 	console.log(i);
-	
+	//multiple is to keep track of table formatting, recipe_match is the id of the first recipe in a multi-recipe input. 
+	//The remaining recipes all have the same recipe_match as the first recipe in the list.
 	$.ajax({
 		method: 'POST',
 		url: '/recipe/',
