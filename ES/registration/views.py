@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 
+#validate the signup form data. Should be a little more robust in username/password validation
 def signup(request):
     username = password = ''
     if request.POST:
