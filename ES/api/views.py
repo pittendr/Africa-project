@@ -13,22 +13,17 @@ from django.shortcuts import render
 
 #API implented using djangorestframework, further details can be found at http://www.django-rest-framework.org/
 
+#Handles POST and GET requests
 class FIAList(APIView):
     def get(self, request, format=None):
         fia = FIA.objects.all()
         serializer = FIASerializer(fia, many=True)
         return Response(serializer.data)
 		
-	#Takes GPS values from POST request and makes API calls to owm and googleapis for weather and GIS data. Stores this data in db.
+    #Takes GPS values from POST request and makes API calls to owm and googleapis for weather and GIS data. Stores this data in db.
     def post(self, request):
         req = request.data
-        gps = json.dumps(req['gps'])
-        gps = json.loads(gps)
-        gps = json.loads(gps)
-        pests = json.dumps(req['pests'])
-        pests = json.loads(pests)
-        pests = json.loads(pests)
-		
+        #Check the received POST values
         if req["mac"] == "null" or req["mac"] is None:
             req["mac"] = None
         if req["aid"] == "null" or req["aid"] is None:
@@ -41,12 +36,20 @@ class FIAList(APIView):
             req["serial"] = None
         if req["phone"] == "null" or req["phone"] is None:
             req["phone"] = None
-			
+           
         if gps is None or gps == "null" or pests is None or pests == "null":
            return Response("No gps data", status=status.HTTP_201_CREATED) 
+        gps = json.dumps(req['gps'])
+        gps = json.loads(gps)
+        gps = json.loads(gps)
+        pests = json.dumps(req['pests'])
+        pests = json.loads(pests)
+        pests = json.loads(pests)
+        
         longitude = gps['longitude']
         latitude = gps['latitude']
 
+	#Google API for elevation details
         url = 'https://maps.googleapis.com/maps/api/elevation/json?locations='+str(latitude)+','+str(longitude)+'&key=AIzaSyBaIP0AbBO1GgS8q9i28FQGd8HopCMNES0'
         resp = json.load(urllib.urlopen(url))
         elevationarray = []
@@ -54,6 +57,7 @@ class FIAList(APIView):
             elevationarray.append(resultset['elevation'])
         elevation = elevationarray[0]
 
+        #OpenWeatherMap API for weather details. Uses pyowm api python wrapper. (RAIN AND WINDDIR VALUES NOT WORKING ANYMORE, MAKE SURE IT IS FIXED BEFORE RELEASE)
         owm = pyowm.OWM('cdb2f4f903237bca966049d773d2e06e')
         observation = owm.weather_at_coords(float(latitude), float(longitude))
         weather = observation.get_weather()
@@ -81,16 +85,19 @@ class FIAList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+#Handles PUT, PATCH, OPTIONS requests
 class FIADetail(generics.RetrieveAPIView):    
     queryset = FIA.objects.all()
     serializer_class = FIASerializer
-	
+
+#Handles POST and GET requests 
 class RecipeList(generics.ListCreateAPIView):
         queryset = Recipe.objects.all()
         serializer_class = RecipeSerializer
         def post(self, request, format=None):
             serializer = RecipeSerializer(data=request.data)
             req = request.data
+            #Validate POST data
             if req['recipe_variable'] is None or req['logic_operator'] is None or req['recipe_limit'] is None or req['recipe_match'] is None or req['recipe_range'] is None or req['recipe_alert'] is None or req['recipe_name'] is None or req['owner'] is None or req['multiple'] is None:
                 return Response("Empty variable", status=status.HTTP_400_BAD_REQUEST)
             
@@ -147,15 +154,16 @@ class RecipeList(generics.ListCreateAPIView):
                 serializer.save(owner=self.request.user)	
                 return render(request, 'notifications/table.html', context)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-		
+            
+#Handles PUT, PATCH, DELETE, OPTIONS	
 class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-	
+#Handles POST and GET requests
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
+#Handles PUT, PATCH, OPTIONS
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
