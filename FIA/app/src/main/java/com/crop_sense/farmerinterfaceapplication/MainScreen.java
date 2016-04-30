@@ -43,7 +43,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import org.apache.http.HttpResponse;

@@ -600,7 +600,6 @@ public class SampleSelection extends AppCompatActivity {
                 new saveToDb().execute();
             }
             tallyBoxes();
-            Toast.makeText(getApplicationContext(), String.valueOf(code), Toast.LENGTH_SHORT).show();
         }
         @Override
         protected void onProgressUpdate(Void... values){
