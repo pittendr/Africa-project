@@ -195,3 +195,14 @@ python manage.py shell
 [<Permission: auth | user | Can Create>]
 ```
 
+#instructions for using a pre made image on Digital Ocean
+1.ExpertSystem--May 2nd 2016
+2.ExpertSystem-Apr28,2016 Nima
+Now make sure that the django settings are correct:
+```
+nano ~/es/Africa-project/ES/expertsystem/settings.py
+```
+And the ALLOWED_HOSTS key is as below:
+```
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'yourIPaddress']
+```
