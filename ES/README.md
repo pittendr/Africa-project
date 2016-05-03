@@ -196,8 +196,8 @@ python manage.py shell
 ```
 
 #Instructions for using a pre made image on Digital Ocean
-*ExpertSystem--May 2nd 2016*
-*ExpertSystem-Apr28,2016 Nima*
+use one of the following images **ExpertSystem--May 2nd 2016** or
+**ExpertSystem-Apr28,2016 Nima**
 Now make sure that the django settings are correct:
 ```
 nano ~/es/Africa-project/ES/expertsystem/settings.py
