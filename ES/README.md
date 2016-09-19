@@ -206,3 +206,4 @@ And the ALLOWED_HOSTS key is as below:
 ```
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'yourIPaddress']
 ```
+if you dont remember user pass go through recreating super user as documented above
